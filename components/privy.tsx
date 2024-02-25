@@ -24,6 +24,7 @@ function Privy({ children }: { children: React.ReactNode }) {
 
   const handleLogin = async (user: PrivyUser) => {
     if (!user.wallet) throw new Error('No wallet found from Privy context.');
+
     track('User Login', {
       user_id: user.wallet.address,
     });
