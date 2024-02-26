@@ -1,7 +1,6 @@
 'use client';
 
-import { PrivyProvider, User as PrivyUser } from '@privy-io/react-auth';
-import { track } from '@vercel/analytics';
+import { PrivyProvider } from '@privy-io/react-auth';
 import { chain } from '@/constants/chain';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createConfig } from '@privy-io/wagmi';
@@ -22,18 +21,9 @@ function Privy({ children }: { children: React.ReactNode }) {
   const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID as string;
   const queryClient = new QueryClient();
 
-  const handleLogin = async (user: PrivyUser) => {
-    if (!user.wallet) throw new Error('No wallet found from Privy context.');
-
-    track('User Login', {
-      user_id: user.wallet.address,
-    });
-  };
-
   return (
     <PrivyProvider
       appId={appId}
-      onSuccess={handleLogin}
       config={{
         loginMethods: ['wallet'],
         appearance: {
