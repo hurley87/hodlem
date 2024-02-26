@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import Privy from '@/components/privy';
+import Privy from './privy';
 import ConvexClientProvider from './ConvexClientProvider';
 
 const inter = Inter({ subsets: ['latin'] });

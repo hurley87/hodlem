@@ -1,5 +1,4 @@
 'use client';
-
 import Onboarding from '@/components/onboarding';
 import { useQuery } from 'convex/react';
 import { api } from '../convex/_generated/api';

@@ -1,5 +1,4 @@
 'use client';
-
 import { PrivyProvider } from '@privy-io/react-auth';
 import { chain } from '@/constants/chain';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

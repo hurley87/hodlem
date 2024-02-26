@@ -1,5 +1,4 @@
 'use client';
-
 import { api } from '@/convex/_generated/api';
 import { usePrivy } from '@privy-io/react-auth';
 import { useMutation } from 'convex/react';
@@ -15,8 +14,8 @@ export default function Onboarding() {
     token: '0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed',
   });
   const farcasterProfile = user?.farcaster;
-  const degen = Number(balance?.data?.value) * 0.000000000000000001;
 
+  const degen = Number(balance?.data?.value) * 0.000000000000000001;
   const degenReadable = degen.toLocaleString('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
