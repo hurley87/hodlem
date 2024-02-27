@@ -9,9 +9,12 @@ import { useBalance } from 'wagmi';
 export default function Onboarding() {
   const { login, user, linkFarcaster, logout } = usePrivy();
   const address = user?.wallet?.address as `0x${string}`;
+  const token = process.env.NEXT_PUBLIC_DEGEN_CONTRACT as `0x${string}`;
+  console.log('token', token);
+  console.log('address', address);
   const balance = useBalance({
     address,
-    token: '0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed',
+    token,
   });
   const farcasterProfile = user?.farcaster;
 
