@@ -1,21 +1,15 @@
-// import { formatEther, parseEther } from "viem";
-// import hre from "hardhat";
+// import { ethers } from 'hardhat';
 
 // async function main() {
-//   const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-//   const unlockTime = BigInt(currentTimestampInSeconds + 60);
+//   const degenAddress = '0xfee293840d23b0b2de8c55e1cf7a9f01c157767c';
+//   const ownerAddress = '0x1D266998DA65E25DE8e1770d48e0E55DDEE39D24';
 
-//   const lockedAmount = parseEther("0.001");
+//   const hodlem = await ethers.deployContract('Hodlem', [
+//     degenAddress,
+//     ownerAddress,
+//   ]);
 
-//   const lock = await hre.viem.deployContract("Lock", [unlockTime], {
-//     value: lockedAmount,
-//   });
-
-//   console.log(
-//     `Lock with ${formatEther(
-//       lockedAmount
-//     )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
-//   );
+//   console.log(`hodlem deployed to ${hodlem.target}`);
 // }
 
 // // We recommend this pattern to be able to use async/await everywhere

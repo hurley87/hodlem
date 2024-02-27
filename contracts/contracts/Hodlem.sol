@@ -18,7 +18,7 @@ contract Hodlem is Ownable {
     mapping(uint256 => Game) public games;
     uint256 public gameId;
 
-    constructor(address _tokenAddress) {
+    constructor(address _tokenAddress, address ownerAddress) Ownable(address(ownerAddress)) {
         token = IERC20(_tokenAddress);
     }
 
