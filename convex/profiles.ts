@@ -50,3 +50,15 @@ export const create = mutation({
     }
   },
 });
+
+export const update = mutation({
+  args: {
+    id: v.id('profiles'),
+    degen: v.string(),
+    allowance: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const { id, degen, allowance } = args;
+    await ctx.db.patch(id, { degen, allowance });
+  },
+});
