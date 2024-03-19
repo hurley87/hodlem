@@ -19,7 +19,7 @@ function SettleHand({ id, onchainId, resultMessage }: Props) {
     setIsSettling(true);
 
     try {
-      const resp = await fetch('/api/settle', {
+      const resp = await fetch('/api/settleDraw', {
         method: 'POST',
         body: JSON.stringify({ onchainId }),
         headers: {
@@ -38,6 +38,7 @@ function SettleHand({ id, onchainId, resultMessage }: Props) {
 
       setIsSettling(false);
     } catch (e) {
+      console.log('e', e);
       toast.error('Error creating hand');
       setIsSettling(false);
       return;

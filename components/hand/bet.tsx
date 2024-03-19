@@ -58,6 +58,7 @@ function BetHand({
 
     if (parseInt(betAmount) > opposingStack) {
       toast.error(`The max bet is ${opposingStack} $DEGEN`);
+      setCreatingBet(false);
       return;
     }
 

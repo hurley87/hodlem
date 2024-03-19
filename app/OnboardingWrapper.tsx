@@ -144,6 +144,8 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
     }
   };
 
+  console.log('allowance', allowance);
+
   return (
     <div>
       {/* user must connect their account */}
@@ -190,7 +192,7 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
       {user &&
         farcasterProfile &&
         balance !== '0' &&
-        allowance !== '0' &&
+        parseInt(allowance).toString() !== '0' &&
         children}
     </div>
   );

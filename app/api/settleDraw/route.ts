@@ -21,21 +21,25 @@ export async function POST(request: NextRequest) {
     transport: http(),
   });
 
-  const { request: writeRequest } = await publicClient.simulateContract({
-    address: hodlemContract,
-    abi: Hodlem.abi,
-    functionName: 'settleDraw',
-    args: [onchainId],
-    account,
-  });
+  let hash: `0x${string}` = '0x0';
 
-  const hash = (await client?.writeContract(
-    writeRequest as any
-  )) as `0x${string}`;
+  try {
+    const { request: writeRequest } = await publicClient.simulateContract({
+      address: hodlemContract,
+      abi: Hodlem.abi,
+      functionName: 'settleDraw',
+      args: [onchainId],
+      account,
+    });
 
-  await publicClient.waitForTransactionReceipt({
-    hash,
-  });
+    hash = (await client?.writeContract(writeRequest as any)) as `0x${string}`;
+
+    await publicClient.waitForTransactionReceipt({
+      hash,
+    });
+  } catch (e) {
+    console.log('e', e);
+  }
 
   return NextResponse.json({ hash }, { status: 200 });
 }
