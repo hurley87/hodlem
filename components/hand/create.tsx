@@ -37,10 +37,6 @@ function CreateHand({
   const createHand = useMutation(api.hands.create);
   const addSmallBlind = useMutation(api.games.addSmallBlind);
 
-  const embeddedWallet = wallets.find(
-    (wallet) => wallet.walletClientType === 'privy'
-  );
-
   publicClient.watchContractEvent({
     address: hodlemContract,
     abi: Hodlem.abi,
