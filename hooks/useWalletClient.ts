@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import {
   type WalletClient,
   createWalletClient,
@@ -12,20 +13,25 @@ type WalletClientType = {
 
 const useWalletClient = async ({ chain, wallet }: WalletClientType) => {
   if (!wallet) return null;
-  // Switch your wallet to your target chain before getting the viem WalletClient
-  await wallet?.switchChain(chain.id);
-  // Get an EIP1193 provider from the user's wallet
-  const ethereumProvider = await wallet?.getEthereumProvider();
-  // get address from wallet
-  const account = wallet?.address as `0x${string}`;
-  // Create a Viem wallet client from the EIP1193 provider
-  const walletClient = await createWalletClient({
-    account,
-    chain,
-    transport: custom(ethereumProvider),
-  });
 
-  return walletClient as WalletClient;
+  try {
+    // Switch your wallet to your target chain before getting the viem WalletClient
+    await wallet?.switchChain(chain.id);
+    // Get an EIP1193 provider from the user's wallet
+    const ethereumProvider = await wallet?.getEthereumProvider();
+    // get address from wallet
+    const account = wallet?.address as `0x${string}`;
+    // Create a Viem wallet client from the EIP1193 provider
+    const walletClient = await createWalletClient({
+      account,
+      chain,
+      transport: custom(ethereumProvider),
+    });
+
+    return walletClient as WalletClient;
+  } catch (e) {
+    toast.error('Error, switch to the Base network');
+  }
 };
 
 export default useWalletClient;

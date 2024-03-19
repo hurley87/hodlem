@@ -1,6 +1,5 @@
 'use client';
-import { PrivyProvider } from '@privy-io/react-auth';
-import { addRpcUrlOverrideToChain } from '@privy-io/react-auth';
+import { PrivyProvider, addRpcUrlOverrideToChain } from '@privy-io/react-auth';
 import { rpc } from '@/constants/rpc';
 import { chain } from '@/constants/chain';
 

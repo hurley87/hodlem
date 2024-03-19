@@ -29,7 +29,7 @@ export const create = mutation({
     fid: v.number(),
     ownerAddress: v.string(),
     pfp: v.string(),
-    username: v.string(),
+    username: v.optional(v.string()),
     address: v.string(),
   },
   handler: async (

@@ -38,7 +38,7 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     async function createProfileIfNotExists() {
-      const username = farcasterProfile?.username as string;
+      const username = farcasterProfile?.username || ('' as string);
       const pfp = farcasterProfile?.pfp as string;
       const displayName = farcasterProfile?.displayName as string;
       const bio = farcasterProfile?.bio as string;
@@ -67,6 +67,11 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
         checkHodlemAllowance();
         setAllowanceChecked(true);
       }
+    }
+
+    if (address) {
+      setDegenBalance();
+      checkHodlemAllowance();
     }
     if (profile) handleUpdateProfile(profile._id, balance, allowance);
   }, [farcasterProfile, balance, profile]);
@@ -134,7 +139,6 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
       checkHodlemAllowance();
       setIsApproving(false);
     } catch (e) {
-      console.log('error', e);
       toast.error('Error approving token allowance');
       setIsApproving(false);
     }
@@ -167,18 +171,21 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
         </div>
       )}
       {/* user must allow Hodlem contract to transfer tokens */}
-      {user && farcasterProfile && balance !== '0' && allowance === '0' && (
-        <div>
-          <p>Connected with {balance} $DEGEN.</p>
-          <p>You need allowance to play the game</p>
-          <button onClick={approveTokenAllowance}>
-            {isApproving ? 'Approving...' : 'Approve Hodlem'}
-          </button>
-          <p>
-            <button onClick={logout}>Logout</button>
-          </p>
-        </div>
-      )}
+      {user &&
+        farcasterProfile &&
+        balance !== '0' &&
+        parseInt(allowance).toString() === '0' && (
+          <div>
+            <p>Connected with {Number(balance)} $DEGEN.</p>
+            <p>You need allowance to play the game</p>
+            <button onClick={approveTokenAllowance}>
+              {isApproving ? 'Approving...' : 'Approve Hodlem'}
+            </button>
+            <p>
+              <button onClick={logout}>Logout</button>
+            </p>
+          </div>
+        )}
       {/* let user see page if they fit the requirements above */}
       {user &&
         farcasterProfile &&

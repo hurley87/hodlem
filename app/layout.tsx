@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import ConvexClientProvider from './ConvexClientProvider';
 import PrivyWrapper from './PrivyWrapper';
-import OnboardingWrapper from './OnboardingWrapper';
 import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -23,9 +22,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Toaster />
         <ConvexClientProvider>
-          <PrivyWrapper>
-            <OnboardingWrapper>{children}</OnboardingWrapper>
-          </PrivyWrapper>
+          <PrivyWrapper>{children}</PrivyWrapper>
         </ConvexClientProvider>
       </body>
     </html>
