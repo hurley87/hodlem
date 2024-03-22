@@ -801,6 +801,8 @@ export const determineWinner = mutation({
     if (checkOnePair(smallBlindCards) && checkOnePair(bigBlindCards)) {
       const smallBlindPair = getPairValue(smallBlindCards);
       const bigBlindPair = getPairValue(bigBlindCards);
+      const smallBlindHighCard = checkHighCard(smallBlindCards);
+      const bigBlindHighCard = checkHighCard(bigBlindCards);
 
       if (smallBlindPair > bigBlindPair) {
         await ctx.db.patch(id, {
@@ -819,11 +821,29 @@ export const determineWinner = mutation({
           activePlayer: hand.bigBlind,
         });
       } else {
-        await ctx.db.patch(id, {
-          stage: 'over',
-          result: 'tie',
-          resultMessage: "It's a tie with a one pair",
-        });
+        if (smallBlindHighCard > bigBlindHighCard) {
+          await ctx.db.patch(id, {
+            stage: 'over',
+            result: 'win',
+            resultMessage: 'Small blind wins with higher card in one pair',
+            winner: hand.smallBlind,
+            activePlayer: hand.smallBlind,
+          });
+        } else if (bigBlindHighCard > smallBlindHighCard) {
+          await ctx.db.patch(id, {
+            stage: 'over',
+            result: 'win',
+            resultMessage: 'Big blind wins with higher card in one pair',
+            winner: hand.bigBlind,
+            activePlayer: hand.bigBlind,
+          });
+        } else {
+          await ctx.db.patch(id, {
+            stage: 'over',
+            result: 'tie',
+            resultMessage: "It's a tie with one pair and equal high card",
+          });
+        }
       }
       return;
     }
