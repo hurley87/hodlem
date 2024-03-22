@@ -50,8 +50,8 @@ export default function Home() {
               </div>
               <GameCreate />
               <p className="px-8 text-center text-sm text-muted-foreground">
-                The game is Heads Up Texas Hold&apos;em and you'll start as the
-                big blind after you create the buy-in.
+                The game is Heads Up Texas Hold&apos;em and you&apos;ll start as
+                the big blind after you create the buy-in.
               </p>
             </div>
           </div>

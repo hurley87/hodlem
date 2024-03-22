@@ -37,7 +37,7 @@ function LinkFarcaster() {
             </div>
             <Button onClick={linkFarcaster}>Link Your Farcaster</Button>
             <p className="px-8 text-center text-sm text-muted-foreground">
-              If you don't have a Farcaster profile you can easily create one{' '}
+              If you don&apos;t have a Farcaster profile you can create one{' '}
               <Link
                 href="https://warpcast.com"
                 target="_blank"

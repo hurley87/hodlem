@@ -17,8 +17,9 @@ function ConnectWallet() {
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">
               <p className="text-lg">
-                &ldquo;You've got to know when to hodl&apos;em. Know when to
-                fold 'em. Know when to walk away. And know when to run.&rdquo;
+                &ldquo;You&apos;ve got to know when to hodl&apos;em. Know when
+                to fold &apos;em. Know when to walk away. And know when to
+                run.&rdquo;
               </p>
               <footer className="text-sm">Kenny Rogers</footer>
             </blockquote>
