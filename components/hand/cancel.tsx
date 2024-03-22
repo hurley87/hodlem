@@ -9,6 +9,8 @@ import Hodlem from '@/hooks/abis/Hodlem.json';
 import { Id } from '@/convex/_generated/dataModel';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
+import { Card, CardContent, CardDescription, CardHeader } from '../ui/card';
+import { Button } from '../ui/button';
 
 function CancelHand({
   gameId,
@@ -73,12 +75,18 @@ function CancelHand({
     }
   }
   return (
-    <div>
-      <p>waitig on small blind to buy-in</p>
-      <button onClick={handleCancelHand}>
-        {isCancelling ? 'Cancelling...' : 'Cancel hand'}
-      </button>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardDescription>
+          Waiting on the small blind to buy-in ...
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button onClick={handleCancelHand} className="w-full">
+          {isCancelling ? 'Cancelling...' : 'Cancel hand'}
+        </Button>
+      </CardContent>
+    </Card>
   );
 }
 

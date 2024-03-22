@@ -10,6 +10,17 @@ import Hodlem from '@/hooks/abis/Hodlem.json';
 import { api } from '@/convex/_generated/api';
 import { useMutation } from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Button } from '../ui/button';
+import CreateHandForm from './create-form';
 
 function RaiseHand({
   id,
@@ -25,7 +36,6 @@ function RaiseHand({
   const { user } = usePrivy();
   const [creatingBet, setCreatingBet] = useState(false);
   const degenContract = process.env.NEXT_PUBLIC_DEGEN_CONTRACT as `0x${string}`;
-  const [raiseAmount, setRaiseAmount] = useState<string>('');
   const { wallets } = useWallets();
   const publicClient = createPublicClient({
     chain,
@@ -38,17 +48,13 @@ function RaiseHand({
     .NEXT_PUBLIC_HODLEM_CONTRACT as `0x${string}`;
   const betHand = useMutation(api.hands.bet);
 
-  const handleRaiseHand = async () => {
+  const handleRaiseHand = async (raiseAmount: number) => {
     setCreatingBet(true);
     const client = await walletClient;
-    const betTotal = parseInt(betAmount) + parseInt(raiseAmount);
+    const betTotal = parseInt(betAmount) + raiseAmount;
     const totalBetAmount = parseEther(betTotal.toString());
 
-    if (
-      isNaN(Number(raiseAmount)) ||
-      Number(raiseAmount) < Number(betAmount) ||
-      raiseAmount === ''
-    ) {
+    if (isNaN(raiseAmount) || raiseAmount < Number(betAmount)) {
       toast.error('You must raise more than the original bet');
       setCreatingBet(false);
       return;
@@ -104,17 +110,23 @@ function RaiseHand({
   };
 
   return (
-    <>
-      <p>Raise your opponent more than {betAmount}</p>
-      <input
-        value={raiseAmount}
-        onChange={(e) => setRaiseAmount(e.target.value)}
-        placeholder="420"
-      />
-      <button onClick={handleRaiseHand}>
-        {creatingBet ? 'Raising...' : 'Raise'}
-      </button>
-    </>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>Raise</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Place a bet</DialogTitle>
+          <DialogDescription>
+            Raise your opponent more than {betAmount}
+          </DialogDescription>
+        </DialogHeader>
+        <CreateHandForm
+          handleCreateHand={handleRaiseHand}
+          creatingHand={creatingBet}
+        />
+      </DialogContent>
+    </Dialog>
   );
 }
 

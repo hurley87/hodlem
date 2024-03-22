@@ -3,22 +3,25 @@ import { useMutation, useQuery } from 'convex/react';
 import { api } from '../convex/_generated/api';
 import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { createPublicClient, formatEther, http, parseEther } from 'viem';
 import { chain } from '@/constants/chain';
 import Degen from '@/hooks/abis/Degen.json';
 import useWalletClient from '@/hooks/useWalletClient';
 import toast from 'react-hot-toast';
 import { Id } from '@/convex/_generated/dataModel';
+import ConnectWallet from '@/components/onboarding/connect';
+import LinkFarcaster from '@/components/onboarding/link';
+import FundAccount from '@/components/onboarding/fund';
+import Approve from '@/components/onboarding/approve';
 
 function OnboardingWrapper({ children }: { children: React.ReactNode }) {
-  const { user, ready, logout, linkFarcaster, login } = usePrivy();
+  const { user, ready } = usePrivy();
   const address = user?.wallet?.address as `0x${string}`;
   const profile = useQuery(api.profiles.getByAddress, {
     address,
   });
   const [balance, setBalance] = useState<string>('');
-  const [allowance, setAllowance] = useState<string>('0');
+  const [allowance, setAllowance] = useState<string | null>(null);
   const farcasterProfile = user?.farcaster;
   const createProfile = useMutation(api.profiles.create);
   const updateProfile = useMutation(api.profiles.update);
@@ -79,7 +82,7 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
   const handleUpdateProfile = async (
     profileId: Id<'profiles'>,
     degen: string,
-    allowance: string
+    allowance: string | null
   ) => {
     if (profileId && degen && allowance) {
       await updateProfile({
@@ -110,7 +113,7 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
     setAllowance(formatEther(result as bigint));
   };
 
-  if (!ready) {
+  if (!ready && allowance) {
     return <div>Loading...</div>;
   }
 
@@ -144,54 +147,34 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
     }
   };
 
-  console.log('allowance', allowance);
-
   return (
-    <div>
+    <div className="md:pt-0">
       {/* user must connect their account */}
-      {!user && <button onClick={login}>Connect</button>}
+      {!user && <ConnectWallet />}
+
       {/* user must link their Farcaster account */}
-      {user && !farcasterProfile && (
-        <button onClick={linkFarcaster}>Link Your Farcaster account</button>
-      )}
+      {user && !farcasterProfile && <LinkFarcaster />}
+
       {/* user must have DEGEN */}
-      {user && farcasterProfile && balance === '0' && (
-        <div>
-          <p>You have no degen</p>
-          <p>
-            <Link
-              href="https://app.uniswap.org/swap?outputCurrency=0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed&chain=base"
-              target="_blank"
-            >
-              Buy some here
-            </Link>
-          </p>
-          <p>
-            <button onClick={setDegenBalance}>Check again</button>
-          </p>
-          <button onClick={logout}>Logout</button>
-        </div>
-      )}
+      {user && farcasterProfile && balance === '0' && <FundAccount />}
+
       {/* user must allow Hodlem contract to transfer tokens */}
       {user &&
         farcasterProfile &&
         balance !== '0' &&
+        allowance &&
         parseInt(allowance).toString() === '0' && (
-          <div>
-            <p>Connected with {Number(balance)} $DEGEN.</p>
-            <p>You need allowance to play the game</p>
-            <button onClick={approveTokenAllowance}>
-              {isApproving ? 'Approving...' : 'Approve Hodlem'}
-            </button>
-            <p>
-              <button onClick={logout}>Logout</button>
-            </p>
-          </div>
+          <Approve
+            approveTokenAllowance={approveTokenAllowance}
+            isApproving={isApproving}
+          />
         )}
+
       {/* let user see page if they fit the requirements above */}
       {user &&
         farcasterProfile &&
         balance !== '0' &&
+        allowance &&
         parseInt(allowance).toString() !== '0' &&
         children}
     </div>

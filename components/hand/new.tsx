@@ -4,6 +4,7 @@ import { Id } from '@/convex/_generated/dataModel';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import toast from 'react-hot-toast';
+import { Button } from '../ui/button';
 
 type Props = {
   id: Id<'hands'>;
@@ -30,11 +31,9 @@ function NewHand({ id }: Props) {
   }
 
   return (
-    <div>
-      <button onClick={handleNewHand}>
-        {isClaiming ? 'Starting...' : 'Start new hand'}
-      </button>
-    </div>
+    <Button onClick={handleNewHand}>
+      {isClaiming ? 'Starting...' : 'Start new hand'}
+    </Button>
   );
 }
 

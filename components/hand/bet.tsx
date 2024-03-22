@@ -9,21 +9,30 @@ import Hodlem from '@/hooks/abis/Hodlem.json';
 import { api } from '@/convex/_generated/api';
 import { useMutation } from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Button } from '../ui/button';
+import CreateHandForm from './create-form';
 
 function BetHand({
   id,
   onchainId,
-  bettorStack,
+  activeStack,
   opposingStack,
 }: {
   id: Id<'hands'>;
   onchainId: string;
-  bettorStack: number;
-  opposingStack: number;
+  activeStack: number | undefined;
+  opposingStack: number | undefined;
 }) {
   const { user } = usePrivy();
   const [creatingBet, setCreatingBet] = useState(false);
-  const [betAmount, setBetAmount] = useState<string>('');
   const { wallets } = useWallets();
   const publicClient = createPublicClient({
     chain,
@@ -36,27 +45,23 @@ function BetHand({
     .NEXT_PUBLIC_HODLEM_CONTRACT as `0x${string}`;
   const betHand = useMutation(api.hands.bet);
 
-  const handleBetHand = async () => {
+  const handleBetHand = async (betAmount: number) => {
     setCreatingBet(true);
     const client = await walletClient;
 
-    if (
-      isNaN(Number(betAmount)) ||
-      Number(betAmount) < 100 ||
-      betAmount === ''
-    ) {
+    if (isNaN(Number(betAmount)) || Number(betAmount) < 100) {
       toast.error("Your bet can't be less than 100");
       setCreatingBet(false);
       return;
     }
 
-    if (parseInt(betAmount) > bettorStack) {
+    if (betAmount > (activeStack || 0)) {
       toast.error('Your stack isnt big enough for this bet');
       setCreatingBet(false);
       return;
     }
 
-    if (parseInt(betAmount) > opposingStack) {
+    if (betAmount > (opposingStack || 0)) {
       toast.error(`The max bet is ${opposingStack} $DEGEN`);
       setCreatingBet(false);
       return;
@@ -67,7 +72,7 @@ function BetHand({
         address: hodlemContract,
         abi: Hodlem.abi,
         functionName: 'makeBet',
-        args: [onchainId, parseEther(betAmount)],
+        args: [onchainId, parseEther(betAmount.toString())],
         account: address,
       });
 
@@ -87,23 +92,28 @@ function BetHand({
 
       setCreatingBet(false);
     } catch (e) {
-      toast.error('Error creating hand');
+      toast.error('Error creating bet');
       setCreatingBet(false);
       return;
     }
   };
 
   return (
-    <>
-      <input
-        value={betAmount}
-        onChange={(e) => setBetAmount(e.target.value)}
-        placeholder="420"
-      />
-      <button onClick={handleBetHand}>
-        {creatingBet ? 'Betting...' : 'Bet'}
-      </button>
-    </>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>Bet</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Place a bet</DialogTitle>
+          <DialogDescription>Enter a bet amount.</DialogDescription>
+        </DialogHeader>
+        <CreateHandForm
+          handleCreateHand={handleBetHand}
+          creatingHand={creatingBet}
+        />
+      </DialogContent>
+    </Dialog>
   );
 }
 

@@ -175,6 +175,13 @@ export const fold = mutation({
       result: 'fold',
       hash,
       stage: 'over',
+      resultMessage: 'Player folded',
+      canReveal: false,
+      canBet: false,
+      canCheck: false,
+      canFold: false,
+      canCall: false,
+      canRaise: false,
     });
   },
 });

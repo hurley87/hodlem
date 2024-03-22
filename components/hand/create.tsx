@@ -11,6 +11,16 @@ import { api } from '@/convex/_generated/api';
 import { useMutation } from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
 import { fetchQuery } from 'convex/nextjs';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import CreateHandForm from './create-form';
 
 function CreateHand({
   gameId,
@@ -22,7 +32,6 @@ function CreateHand({
   const { user } = usePrivy();
   const [creatingHand, setCreatingHand] = useState(false);
   const degenContract = process.env.NEXT_PUBLIC_DEGEN_CONTRACT as `0x${string}`;
-  const [buyIn, setBuyIn] = useState<string>('');
   const [handCreated, setHandCreated] = useState(false);
   const { wallets } = useWallets();
   const publicClient = createPublicClient({
@@ -67,14 +76,9 @@ function CreateHand({
     setHandCreated(true);
   };
 
-  const handleCreateHand = async () => {
+  const handleCreateHand = async (buyIn: number) => {
     if (!walletClient) {
       toast.error('No wallet connected');
-      return;
-    }
-
-    if (isNaN(Number(buyIn)) || Number(buyIn) < 100 || buyIn === '') {
-      toast.error("Buy-in can't be less than 100");
       return;
     }
 
@@ -131,13 +135,13 @@ function CreateHand({
 
       const bigBlindStack = parseInt(formatEther(bigBlindBlanace));
 
-      if (smallBlindStack < parseInt(buyIn)) {
+      if (smallBlindStack < buyIn) {
         toast.error('Small blind cannot afford this buy-in');
         setCreatingHand(false);
         return;
       }
 
-      if (bigBlindStack < parseInt(buyIn)) {
+      if (bigBlindStack < buyIn) {
         toast.error('You do not have enough allowance to make this bet');
         setCreatingHand(false);
         return;
@@ -147,7 +151,7 @@ function CreateHand({
         address: hodlemContract,
         abi: Hodlem.abi,
         functionName: 'createHand',
-        args: [parseEther(buyIn), smallBlind],
+        args: [parseEther(buyIn.toString()), smallBlind],
         account: address,
       });
 
@@ -170,16 +174,24 @@ function CreateHand({
   };
 
   return (
-    <>
-      <input
-        value={buyIn}
-        onChange={(e) => setBuyIn(e.target.value)}
-        placeholder="420"
-      />
-      <button onClick={handleCreateHand}>
-        {creatingHand ? 'Creating buy-in...' : 'Set buy-in'}
-      </button>
-    </>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button className="w-full">Create hand</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Create Buy-in</DialogTitle>
+          <DialogDescription>
+            There is a 100 $DEGEN rake fee. The small blind will have to match
+            your buy-in above this fee.
+          </DialogDescription>
+        </DialogHeader>
+        <CreateHandForm
+          handleCreateHand={handleCreateHand}
+          creatingHand={creatingHand}
+        />
+      </DialogContent>
+    </Dialog>
   );
 }
 

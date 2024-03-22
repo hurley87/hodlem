@@ -2,7 +2,8 @@
 import { api } from '@/convex/_generated/api';
 import { useMutation } from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
-import OnboardingWrapper from '@/app/OnboardingWrapper';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardDescription, CardHeader } from '../ui/card';
 
 export default function Challenge({
   id,
@@ -22,8 +23,17 @@ export default function Challenge({
   };
 
   return (
-    <OnboardingWrapper>
-      <button onClick={handleChallenge}>Ask to join</button>
-    </OnboardingWrapper>
+    <Card>
+      <CardHeader>
+        <CardDescription>
+          Ask to join this game as the small blind
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button className="w-full" onClick={handleChallenge}>
+          Ask
+        </Button>
+      </CardContent>
+    </Card>
   );
 }

@@ -2,6 +2,8 @@ import '@nomicfoundation/hardhat-toolbox';
 
 require('dotenv').config();
 
+const base = process.env.ETHERSCAN_API_KEY as string;
+
 const config = {
   solidity: '0.8.24',
   networks: {
@@ -20,6 +22,11 @@ const config = {
       chainId: 8453,
       url: 'https://mainnet.base.org',
       accounts: [process.env.PRIVATE_KEY as string],
+    },
+  },
+  etherscan: {
+    apiKey: {
+      base: '116GHSKUETSDERY78Y9D6R4NP6G5P2FIIT',
     },
   },
 };

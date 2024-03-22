@@ -1,8 +1,9 @@
 'use client';
 import { useState } from 'react';
 import { Id } from '@/convex/_generated/dataModel';
-import { useMutation } from 'convex/react';
+import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
+import { Button } from '../ui/button';
 
 function CheckHand({ id }: { id: Id<'hands'> }) {
   const [isChecking, setIsChecking] = useState(false);
@@ -19,11 +20,9 @@ function CheckHand({ id }: { id: Id<'hands'> }) {
   }
 
   return (
-    <div>
-      <button onClick={handleDealHand}>
-        {isChecking ? 'Checking...' : 'Check'}
-      </button>
-    </div>
+    <Button disabled={isChecking} onClick={handleDealHand}>
+      {isChecking ? 'Checking...' : 'Check'}
+    </Button>
   );
 }
 

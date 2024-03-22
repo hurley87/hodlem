@@ -1,12 +1,11 @@
-'use client';
-import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
+import { useMutation } from 'convex/react';
+import { Button } from './ui/button';
 import { usePrivy } from '@privy-io/react-auth';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import OnboardingWrapper from '../OnboardingWrapper';
 
-export default function Home() {
+export function GameCreate() {
   const { user } = usePrivy();
   const createGame = useMutation(api.games.create);
   const router = useRouter();
@@ -20,10 +19,8 @@ export default function Home() {
   };
 
   return (
-    <OnboardingWrapper>
-      <button disabled={isCreatingGame} onClick={handleCreateGame}>
-        {isCreatingGame ? 'Creating game...' : 'Create game'}
-      </button>
-    </OnboardingWrapper>
+    <Button disabled={isCreatingGame} onClick={handleCreateGame}>
+      {isCreatingGame ? 'Creating game...' : 'Create game'}
+    </Button>
   );
 }

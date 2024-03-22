@@ -9,6 +9,8 @@ import Hodlem from '@/hooks/abis/Hodlem.json';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
+import { Card, CardContent, CardDescription, CardHeader } from '../ui/card';
+import { Button } from '../ui/button';
 
 function JoinHand({
   id,
@@ -68,12 +70,18 @@ function JoinHand({
   }
 
   return (
-    <div>
-      <p>accept the {bigBlindBetTotal} buy-in</p>
-      <button onClick={handleJoin}>
-        {isJoining ? 'Joining hand...' : 'Join hand'}
-      </button>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardDescription>
+          Accept the {bigBlindBetTotal} $DEGEN buy-in
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Button onClick={handleJoin} className="w-full">
+          {isJoining ? 'Joining...' : 'Join hand'}
+        </Button>
+      </CardContent>
+    </Card>
   );
 }
 

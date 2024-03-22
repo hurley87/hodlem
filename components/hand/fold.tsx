@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { api } from '@/convex/_generated/api';
 import { useMutation } from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
+import { Button } from '../ui/button';
 
 function FoldHand({
   id,
@@ -47,13 +48,9 @@ function FoldHand({
   };
 
   return (
-    <>
-      <p>
-        <button onClick={handleFoldHand}>
-          {foldingHand ? 'Folding...' : 'Fold'}
-        </button>
-      </p>
-    </>
+    <Button onClick={handleFoldHand}>
+      {foldingHand ? 'Folding...' : 'Fold'}
+    </Button>
   );
 }
 

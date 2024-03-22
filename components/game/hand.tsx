@@ -9,17 +9,11 @@ import Hodlem from '@/hooks/abis/Hodlem.json';
 import Degen from '@/hooks/abis/Degen.json';
 import JoinHand from '../hand/join';
 import CancelHand from '../hand/cancel';
-import DealHead from '../hand/deal';
-import Image from 'next/image';
-import BetHand from '../hand/bet';
-import CheckHand from '../hand/check';
-import CallHand from '../hand/call';
-import RaiseHand from '../hand/raise';
-import FoldHand from '../hand/fold';
-import RevealCards from '../hand/reveal';
-import SettleHand from '../hand/settle';
-import ClaimHand from '../hand/claim';
-import NewHand from '../hand/new';
+import DealHand from '../hand/deal';
+import { Card, CardDescription, CardHeader } from '../ui/card';
+import Table from '../hand/table';
+import OpposingPlayer from '../hand/opposing';
+import ActivePlayer from '../hand/active';
 
 export default function Hand({
   gameId,
@@ -34,7 +28,7 @@ export default function Hand({
 }) {
   const hand = useQuery(api.hands.getHand, {
     handId,
-  });
+  }) as any;
   const publicClient = createPublicClient({
     chain,
     transport: http(),
@@ -48,16 +42,14 @@ export default function Hand({
   const onchainId = hand?.onchainId;
   const bigBlindBetTotal = hand?.bigBlindBetTotal;
   const smallBlindBetTotal = hand?.smallBlindBetTotal;
-  const hasntJoined = smallBlindBetTotal === 0 && bigBlindBetTotal > 0;
+  const noOpponent =
+    smallBlindBetTotal === 0 &&
+    bigBlindBetTotal > 0 &&
+    hand?.stage !== 'preFlop';
   const hasDealt = hand?.bigBlindCards;
-  const bigBlindCards = hand?.bigBlindCards;
-  const smallBlindCards = hand?.smallBlindCards;
   const isSmallBlind = hand?.smallBlind === player;
-  const isActivePlayer = hand?.activePlayer === player;
-  const flopCards = hand?.flopCards;
-  const turnCard = hand?.turnCard;
-  const riverCard = hand?.riverCard;
-  const opposingPlayer = isSmallBlind ? hand?.bigBlind : hand?.smallBlind;
+  const opposingStack = isSmallBlind ? bigBlindStack : smallBlindStack;
+  const activeStack = isSmallBlind ? smallBlindStack : bigBlindStack;
 
   useEffect(() => {
     async function getOnchainHand() {
@@ -122,12 +114,10 @@ export default function Hand({
 
   if (!hand) return <div>Loading...</div>;
 
-  if (!hand?.isActive) return <div>Hand is over</div>;
-
-  if (isBigBlind && hasntJoined)
+  if (isBigBlind && noOpponent)
     return <CancelHand id={handId} onchainId={onchainId} gameId={gameId} />;
 
-  if (!isBigBlind && hasntJoined)
+  if (!isBigBlind && noOpponent)
     return (
       <JoinHand
         id={handId}
@@ -136,126 +126,32 @@ export default function Hand({
       />
     );
 
-  const showCards = (cards: string[]) => {
-    return (
-      <div className="flex gap-2">
-        {cards?.map((card: string) => (
-          <div key={card} className="bg-white p-2 rounded-md">
-            <Image
-              alt={card}
-              src={`/cards/${card}.svg`}
-              width={75}
-              height={100}
-            />
-          </div>
-        ))}
-      </div>
-    );
-  };
-
-  if (hand) {
-    const bettorStack = isSmallBlind ? smallBlindStack : bigBlindStack;
-    const opposingStack = isSmallBlind ? bigBlindStack : smallBlindStack;
-    const activeStack = isSmallBlind ? smallBlindStack : bigBlindStack;
-    const handOver = hand?.stage === 'over';
-
+  if (!hasDealt) {
     return (
       <>
-        {!hasDealt && (
-          <>
-            {isBigBlind && <DealHead id={handId} gameId={gameId} />}
-            {!isBigBlind && <div>waiting on dealer</div>}
-          </>
-        )}
-
-        {hasDealt && !handOver && (
-          <>
-            <h1>Big Blind Stack: {bigBlindStack}</h1>
-            <h1>Small Blind Stack: {smallBlindStack}</h1>
-            <h1>Pot: {pot}</h1>
-            {flopCards && showCards(flopCards)}
-            {turnCard && showCards([turnCard])}
-            {riverCard && showCards([riverCard])}
-            <h1>
-              {hand.stage} - {isBigBlind ? 'Big blind' : 'Small blind'}
-            </h1>
-            {showCards(isSmallBlind ? smallBlindCards : bigBlindCards)}
-            {!isActivePlayer && (
-              <div>
-                <p>Waiting on the other player to act</p>
-              </div>
-            )}
-            {isActivePlayer && (
-              <div>
-                {hand?.canBet && opposingStack !== 0 && activeStack !== 0 && (
-                  <BetHand
-                    id={hand._id}
-                    onchainId={onchainId}
-                    bettorStack={bettorStack as number}
-                    opposingStack={opposingStack as number}
-                  />
-                )}
-                {hand?.canCheck && <CheckHand id={hand._id} />}
-                {hand?.canCall && (
-                  <CallHand
-                    id={hand._id}
-                    onchainId={onchainId}
-                    betAmount={hand?.betAmount.toString()}
-                  />
-                )}
-                {hand?.canRaise && opposingStack !== 0 && activeStack !== 0 && (
-                  <RaiseHand
-                    id={hand._id}
-                    onchainId={onchainId}
-                    betAmount={hand?.betAmount.toString()}
-                    opposingStack={opposingStack as number}
-                  />
-                )}
-                {hand?.canFold && (
-                  <FoldHand
-                    id={hand._id}
-                    onchainId={onchainId}
-                    winner={opposingPlayer}
-                  />
-                )}
-                {hand?.canReveal && (
-                  <RevealCards id={hand._id} gameId={gameId} />
-                )}
-              </div>
-            )}
-          </>
-        )}
-
-        {handOver && (
-          <div>
-            {hand.hash ? (
-              <div>
-                {hand.result === 'fold' && <p>Hand hash settled</p>}
-                <p>{hand.hash}</p>
-                <NewHand id={hand._id} />
-              </div>
-            ) : (
-              <>
-                {hand.result === 'tie' && (
-                  <SettleHand
-                    id={hand._id}
-                    onchainId={onchainId}
-                    resultMessage={hand.resultMessage}
-                  />
-                )}
-                {hand.result === 'win' && (
-                  <ClaimHand
-                    id={hand._id}
-                    onchainId={onchainId}
-                    resultMessage={hand.resultMessage}
-                    winner={hand.winner}
-                  />
-                )}
-              </>
-            )}
-          </div>
+        {isBigBlind && <DealHand id={handId} gameId={gameId} />}
+        {!isBigBlind && (
+          <Card>
+            <CardHeader>
+              <CardDescription>
+                Waiting on the other player to act ...
+              </CardDescription>
+            </CardHeader>
+          </Card>
         )}
       </>
     );
   }
+
+  return (
+    <div className="flex flex-col gap-2">
+      <OpposingPlayer handId={handId} stack={opposingStack} />
+      <Table handId={handId} pot={pot} />
+      <ActivePlayer
+        handId={handId}
+        activeStack={activeStack}
+        opposingStack={opposingStack}
+      />
+    </div>
+  );
 }

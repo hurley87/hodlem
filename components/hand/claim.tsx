@@ -4,6 +4,7 @@ import { Id } from '@/convex/_generated/dataModel';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import toast from 'react-hot-toast';
+import { Button } from '../ui/button';
 
 type Props = {
   id: Id<'hands'>;
@@ -35,7 +36,7 @@ function ClaimHand({ id, onchainId, resultMessage, winner }: Props) {
         hash,
       });
 
-      toast.success('Hand settled');
+      toast.success('Congrats!');
 
       setIsClaiming(false);
     } catch (e) {
@@ -46,12 +47,9 @@ function ClaimHand({ id, onchainId, resultMessage, winner }: Props) {
   }
 
   return (
-    <div>
-      <p>{resultMessage}.</p>
-      <button onClick={handleDealHand}>
-        {isClaiming ? 'Claiming...' : 'Claim'}
-      </button>
-    </div>
+    <Button disabled={isClaiming} onClick={handleDealHand}>
+      {isClaiming ? 'Claiming...' : 'Claim'}
+    </Button>
   );
 }
 

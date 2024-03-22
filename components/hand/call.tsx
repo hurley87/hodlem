@@ -1,5 +1,4 @@
 'use client';
-
 import toast from 'react-hot-toast';
 import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { useState } from 'react';
@@ -11,6 +10,7 @@ import Hodlem from '@/hooks/abis/Hodlem.json';
 import { api } from '@/convex/_generated/api';
 import { useMutation } from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
+import { Button } from '../ui/button';
 
 function CallHand({
   id,
@@ -85,12 +85,9 @@ function CallHand({
   };
 
   return (
-    <>
-      <p>Your opponent bet {betAmount}</p>
-      <button onClick={handleCallHand}>
-        {creatingBet ? 'Calling...' : 'Call'}
-      </button>
-    </>
+    <Button disabled={creatingBet} onClick={handleCallHand}>
+      {creatingBet ? 'Calling...' : `Call ${betAmount} $DEGEN`}
+    </Button>
   );
 }
 

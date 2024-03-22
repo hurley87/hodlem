@@ -6,6 +6,14 @@ import { usePrivy } from '@privy-io/react-auth';
 import CreateHand from '@/components/hand/create';
 import Challenge from '@/components/game/challenge';
 import Hand from '@/components/game/hand';
+import { GameLayout } from '@/components/game-layout';
+import Share from '@/components/game/share';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from '@/components/ui/card';
 
 export default function Game({ params }: { params: { uid: Id<'games'> } }) {
   const gameId = params.uid;
@@ -28,23 +36,14 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
   }
 
   return (
-    <>
-      <h1>game: {params.uid}</h1>
+    <GameLayout>
       {isBigBlind && !hasSmallBlind && (
-        <div>
-          <p>Share this link with a friend</p>
-          {challengers.map((challenger: `0x${string}`) => {
-            return (
-              <div key={challenger}>
-                <p>{challenger}</p>
-
-                {isBigBlind && (
-                  <CreateHand gameId={gameId} smallBlind={challenger} />
-                )}
-              </div>
-            );
-          })}
-        </div>
+        <Share
+          id={gameId}
+          challengers={challengers}
+          address={address}
+          isBigBlind={isBigBlind}
+        />
       )}
 
       {!isBigBlind && !hasSmallBlind && !challengers?.includes(address) && (
@@ -52,15 +51,36 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
       )}
 
       {!isBigBlind && !hasSmallBlind && challengers?.includes(address) && (
-        <div>waiting on big blind to set the buy-in</div>
+        <Card>
+          <CardHeader>
+            <CardDescription>
+              Waiting on the big blind to set the buy-in ...
+            </CardDescription>
+          </CardHeader>
+        </Card>
       )}
 
       {isBigBlind && hasSmallBlind && !activeHand && (
-        <CreateHand gameId={gameId} smallBlind={game?.smallBlind} />
+        <Card>
+          <CardHeader>
+            <CardDescription>
+              Start by creating a buy-in for the small blind ...
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <CreateHand gameId={gameId} smallBlind={game?.smallBlind} />
+          </CardContent>
+        </Card>
       )}
 
       {!isBigBlind && hasSmallBlind && !activeHand && (
-        <div>waiting on your big blind to set the buy-in</div>
+        <Card>
+          <CardHeader>
+            <CardDescription>
+              Waiting on the big blind to set the buy-in ...
+            </CardDescription>
+          </CardHeader>
+        </Card>
       )}
 
       {hasSmallBlind && activeHand && (
@@ -71,6 +91,6 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
           player={address}
         />
       )}
-    </>
+    </GameLayout>
   );
 }

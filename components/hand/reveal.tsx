@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { Id } from '@/convex/_generated/dataModel';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
+import { Button } from '../ui/button';
 
 type Props = {
   id: Id<'hands'>;
-  gameId: Id<'games'>;
 };
 
 function RevealHand({ id }: Props) {
@@ -20,11 +20,9 @@ function RevealHand({ id }: Props) {
   }
 
   return (
-    <div>
-      <button onClick={handleRevealHand}>
-        {isRevealing ? 'Revealing...' : 'Reveal hand'}
-      </button>
-    </div>
+    <Button onClick={handleRevealHand}>
+      {isRevealing ? 'Finishing...' : 'Finish hand'}
+    </Button>
   );
 }
 

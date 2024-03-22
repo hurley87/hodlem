@@ -6,7 +6,12 @@ export const get = query({
   handler: async (ctx, { address }) => {
     return await ctx.db
       .query('games')
-      .filter((q: any) => q.eq(q.field('bigBlind'), address))
+      .filter((q: any) =>
+        q.or(
+          q.eq(q.field('bigBlind'), address),
+          q.eq(q.field('smallBlind'), address)
+        )
+      )
       .collect();
   },
 });
