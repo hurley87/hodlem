@@ -4,6 +4,7 @@ import './globals.css';
 import ConvexClientProvider from './ConvexClientProvider';
 import PrivyWrapper from './PrivyWrapper';
 import { Toaster } from 'react-hot-toast';
+import '@liveblocks/react-comments/styles.css';
 
 const fontSans = FontSans({
   subsets: ['latin'],
