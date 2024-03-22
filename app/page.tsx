@@ -30,10 +30,10 @@ export default function Home() {
             </div>
             <div className="relative z-20 mt-auto">
               <blockquote className="space-y-2">
-                <p className="text-lg">
+                <div className="text-lg">
                   &ldquo;Hodl&apos;em is to stud what chess is to
                   checkers&rdquo;
-                </p>
+                </div>
                 <footer className="text-sm">Johnny Moss</footer>
               </blockquote>
             </div>
@@ -44,15 +44,15 @@ export default function Home() {
                 <h1 className="text-2xl font-semibold tracking-tight">
                   Create a Game
                 </h1>
-                <p className="text-sm text-muted-foreground">
+                <div className="text-sm text-muted-foreground">
                   You&apos;ll have to invite a friend to play after
-                </p>
+                </div>
               </div>
               <GameCreate />
-              <p className="px-8 text-center text-sm text-muted-foreground">
+              <div className="px-8 text-center text-sm text-muted-foreground">
                 The game is Heads Up Texas Hold&apos;em and you&apos;ll start as
                 the big blind after you create the buy-in.
-              </p>
+              </div>
             </div>
           </div>
         </div>
@@ -67,7 +67,7 @@ export default function Home() {
                   <GameCreate />
                 </div>
                 {games?.map((game: any) => (
-                  <>
+                  <div key={game._id}>
                     {game.smallBlind === '' && (
                       <GameInvite
                         key={game._id}
@@ -86,7 +86,7 @@ export default function Home() {
                         }
                       />
                     )}
-                  </>
+                  </div>
                 ))}
               </div>
             </GameLayout>

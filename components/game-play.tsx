@@ -27,12 +27,12 @@ export function GamePlay({ gameId, address }: Props) {
             <AvatarFallback>OM</AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-sm font-medium leading-none">
+            <div className="text-sm font-medium leading-none">
               {profile.displayName}
-            </p>
-            <p className="text-xs text-muted-foreground pt-0.5">
+            </div>
+            <div className="text-xs text-muted-foreground pt-0.5">
               {toHumanReadable(parseInt(profile.degen))} $DEGEN
-            </p>
+            </div>
           </div>
         </div>
         <svg

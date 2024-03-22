@@ -68,10 +68,10 @@ function ActivePlayer({ handId, activeStack, opposingStack }: Props) {
       <CardHeader>
         <CardDescription>
           <div className="flex justify-between">
-            <p>
+            <div>
               {profile.displayName} |{' '}
               {!activeStack ? 0 : toHumanReadable(activeStack)} $DEGEN
-            </p>
+            </div>
             {isActivePlayer ? (
               <Badge className="bg-green-500">Your turn</Badge>
             ) : isBigBlind ? (
@@ -87,19 +87,19 @@ function ActivePlayer({ handId, activeStack, opposingStack }: Props) {
       </CardContent>
       <CardFooter className="flex gap-2">
         {!isActivePlayer && handOver && hand.result === 'win' && (
-          <p className="text-sm text-muted-foreground">
+          <div className="text-sm text-muted-foreground">
             Waiting on other player to claim ...
-          </p>
+          </div>
         )}
         {!isActivePlayer && handOver && hand.result === 'tie' && (
-          <p className="text-sm text-muted-foreground">
+          <div className="text-sm text-muted-foreground">
             Waiting on other player to settle ...
-          </p>
+          </div>
         )}
         {!isActivePlayer && !handOver && (
-          <p className="text-sm text-muted-foreground">
+          <div className="text-sm text-muted-foreground">
             Waiting on other player to act ...
-          </p>
+          </div>
         )}
         {hand?.canCheck && isActivePlayer && <CheckHand id={handId} />}
         {hand?.canCall && isActivePlayer && (
@@ -160,36 +160,3 @@ function ActivePlayer({ handId, activeStack, opposingStack }: Props) {
 }
 
 export default ActivePlayer;
-
-// {
-/* 
-        {handOver && (
-          <div>
-            {hand.hash ? (
-              <div>
-                {hand.result === 'fold' && <p>Hand hash settled</p>}
-                <p>{hand.hash}</p>
-                <NewHand id={hand._id} />
-              </div>
-            ) : (
-              <>
-                {hand.result === 'tie' && (
-                  <SettleHand
-                    id={hand._id}
-                    onchainId={onchainId}
-                    resultMessage={hand.resultMessage}
-                  />
-                )}
-                {hand.result === 'win' && (
-                  <ClaimHand
-                    id={hand._id}
-                    onchainId={onchainId}
-                    resultMessage={hand.resultMessage}
-                    winner={hand.winner}
-                  />
-                )}
-              </>
-            )}
-          </div>
-        )} */
-// }

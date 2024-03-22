@@ -11,12 +11,12 @@ export function GameInvite({ gameId, numOfChallengers }: Props) {
     <Link href={`/game/${gameId}`}>
       <div className="flex justify-between items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent">
         {numOfChallengers === 0 ? (
-          <p>No one has joined yet</p>
+          <div>No one has joined yet</div>
         ) : (
-          <p>
+          <div>
             {numOfChallengers}{' '}
             {numOfChallengers === 1 ? ' person has ' : ' people have '} joined
-          </p>
+          </div>
         )}
         <svg
           xmlns="http://www.w3.org/2000/svg"

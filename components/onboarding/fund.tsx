@@ -22,10 +22,10 @@ function FundAccount() {
           </div>
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">
-              <p className="text-lg">
+              <div className="text-lg">
                 &ldquo;No-limit hodlem: Hours of boredom followed by moments of
                 sheer terror.&rdquo;
-              </p>
+              </div>
               <footer className="text-sm">Tom McEvoy</footer>
             </blockquote>
           </div>
@@ -36,9 +36,9 @@ function FundAccount() {
               <h1 className="text-2xl font-semibold tracking-tight">
                 Buy $DEGEN Tokens
               </h1>
-              <p className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground">
                 True degens start with at least 1,000 $DEGEN.
-              </p>
+              </div>
             </div>
             <Link
               target="_blank"
@@ -47,13 +47,13 @@ function FundAccount() {
             >
               <Button className="w-full">Buy</Button>
             </Link>
-            <p className="px-8 text-center text-sm text-muted-foreground">
+            <div className="px-8 text-center text-sm text-muted-foreground">
               Refresh this screen after you have $DEGEN in this wallet,{' '}
               <span className="cursor-pointer" onClick={copyAddress}>
                 {user?.wallet?.address.slice(0, 6)}...
                 {user?.wallet?.address.slice(-4)}
               </span>
-            </p>
+            </div>
           </div>
         </div>
       </div>

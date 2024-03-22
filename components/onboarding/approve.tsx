@@ -18,10 +18,10 @@ function Approve({ approveTokenAllowance, isApproving }: Props) {
           </div>
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">
-              <p className="text-lg">
+              <div className="text-lg">
                 &ldquo;Life is not always a matter of hodling good cards, but
                 sometimes playing a poor hand well.&rdquo;
-              </p>
+              </div>
               <footer className="text-sm">Jack London</footer>
             </blockquote>
           </div>
@@ -32,14 +32,14 @@ function Approve({ approveTokenAllowance, isApproving }: Props) {
               <h1 className="text-2xl font-semibold tracking-tight">
                 Approve $DEGEN Allowance
               </h1>
-              <p className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground">
                 This will let you bet with $DEGEN.
-              </p>
+              </div>
             </div>
             <Button onClick={approveTokenAllowance}>
               {isApproving ? 'Approving...' : 'Approve'}
             </Button>
-            <p className="px-8 text-center text-sm text-muted-foreground">
+            <div className="px-8 text-center text-sm text-muted-foreground">
               Review the{' '}
               <Link
                 href="https://basescan.org/address/0xC8B2113c4EA4F09B44CD5A13F57a7124D800899C#code"
@@ -49,7 +49,7 @@ function Approve({ approveTokenAllowance, isApproving }: Props) {
                 Hodlem contract
               </Link>
               .
-            </p>
+            </div>
           </div>
         </div>
       </div>

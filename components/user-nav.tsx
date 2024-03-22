@@ -35,23 +35,20 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">
+            <div className="text-sm font-medium leading-none">
               {profile?.username === ''
                 ? profile?.displayName
                 : profile?.username}
-            </p>
+            </div>
             {profile && (
-              <p className="text-xs leading-none text-muted-foreground">
+              <div className="text-xs leading-none text-muted-foreground">
                 {toHumanReadable(parseInt(profile.degen))} $DEGEN
-              </p>
+              </div>
             )}
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <Link target="_blank" href="https://warpcast.com/hurls">
-            <DropdownMenuItem>Questions?</DropdownMenuItem>
-          </Link>
           <Link href="/">
             <DropdownMenuItem>Games</DropdownMenuItem>
           </Link>
@@ -60,6 +57,9 @@ export function UserNav() {
             href="https://app.uniswap.org/swap?outputCurrency=0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed&chain=base"
           >
             <DropdownMenuItem>Buy $DEGEN</DropdownMenuItem>
+          </Link>
+          <Link target="_blank" href="https://warpcast.com/hurls">
+            <DropdownMenuItem>Questions?</DropdownMenuItem>
           </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

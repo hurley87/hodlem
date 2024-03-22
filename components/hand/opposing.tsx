@@ -35,10 +35,10 @@ function OpposingPlayer({ handId, stack }: Props) {
       <CardHeader>
         <CardDescription>
           <div className="flex justify-between">
-            <p>
+            <div>
               {profile.displayName} | {!stack ? 0 : toHumanReadable(stack)}{' '}
               $DEGEN
-            </p>
+            </div>
             {isActivePlayer ? (
               <Badge className="bg-green-500">Their turn</Badge>
             ) : isBigBlind ? (

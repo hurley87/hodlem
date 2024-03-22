@@ -16,11 +16,11 @@ function LinkFarcaster() {
           </div>
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">
-              <p className="text-lg">
+              <div className="text-lg">
                 &ldquo;Poker may be a branch of psychological warfare, an art
                 form or indeed a way of life, but it is also merely a game in
                 which money is simply the means of keeping score.&rdquo;
-              </p>
+              </div>
               <footer className="text-sm">Anthony Hodlen</footer>
             </blockquote>
           </div>
@@ -31,12 +31,12 @@ function LinkFarcaster() {
               <h1 className="text-2xl font-semibold tracking-tight">
                 Link Your Farcaster
               </h1>
-              <p className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground">
                 All players must link their Farcaster to play
-              </p>
+              </div>
             </div>
             <Button onClick={linkFarcaster}>Link Your Farcaster</Button>
-            <p className="px-8 text-center text-sm text-muted-foreground">
+            <div className="px-8 text-center text-sm text-muted-foreground">
               If you don&apos;t have a Farcaster profile you can create one{' '}
               <Link
                 href="https://warpcast.com"
@@ -46,7 +46,7 @@ function LinkFarcaster() {
                 here
               </Link>
               .
-            </p>
+            </div>
           </div>
         </div>
       </div>

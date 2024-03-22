@@ -31,15 +31,15 @@ export default function Challenger({
               target="_blank"
               href={`https://warpcast.com/${profile.username}`}
             >
-              <p className="text-md font-medium leading-none">
+              <div className="text-md font-medium leading-none">
                 {profile.username === ''
                   ? profile.displayName
                   : profile.username}
-              </p>
+              </div>
             </Link>
-            <p className="text-xs leading-none text-muted-foreground pt-1">
+            <div className="text-xs leading-none text-muted-foreground pt-1">
               {toHumanReadable(parseInt(profile.degen))} $DEGEN
-            </p>
+            </div>
           </div>
         )}
       </div>

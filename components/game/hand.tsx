@@ -51,8 +51,6 @@ export default function Hand({
   const opposingStack = isSmallBlind ? bigBlindStack : smallBlindStack;
   const activeStack = isSmallBlind ? smallBlindStack : bigBlindStack;
 
-  console.log('hand', hand);
-
   useEffect(() => {
     async function getOnchainHand() {
       try {

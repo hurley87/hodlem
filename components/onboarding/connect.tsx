@@ -16,11 +16,11 @@ function ConnectWallet() {
           </div>
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">
-              <p className="text-lg">
+              <div className="text-lg">
                 &ldquo;You&apos;ve got to know when to hodl&apos;em. Know when
                 to fold &apos;em. Know when to walk away. And know when to
                 run.&rdquo;
-              </p>
+              </div>
               <footer className="text-sm">Kenny Rogers</footer>
             </blockquote>
           </div>
@@ -31,12 +31,12 @@ function ConnectWallet() {
               <h1 className="text-2xl font-semibold tracking-tight">
                 Create an account
               </h1>
-              <p className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground">
                 Connect a wallet that holds $DEGEN
-              </p>
+              </div>
             </div>
             <Button onClick={login}>Connect</Button>
-            <p className="px-8 text-center text-sm text-muted-foreground">
+            <div className="px-8 text-center text-sm text-muted-foreground">
               <Link
                 href="https://www.degen.tips"
                 target="_blank"
@@ -53,7 +53,7 @@ function ConnectWallet() {
                 here
               </Link>
               .
-            </p>
+            </div>
           </div>
         </div>
       </div>
