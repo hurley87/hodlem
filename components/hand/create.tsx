@@ -45,6 +45,9 @@ function CreateHand({
     .NEXT_PUBLIC_HODLEM_CONTRACT as `0x${string}`;
   const createHand = useMutation(api.hands.create);
   const addSmallBlind = useMutation(api.games.addSmallBlind);
+  const [allowMore, setAllowMore] = useState(false);
+  const [balance, setBalance] = useState<string>('0');
+  const [isApproving, setIsApproving] = useState(false);
 
   publicClient.watchContractEvent({
     address: hodlemContract,
@@ -130,6 +133,18 @@ function CreateHand({
         args: [bigBlind],
       })) as bigint;
 
+      console.log('bigBlindBlanace', bigBlindBlanace);
+      setBalance(formatEther(bigBlindBlanace));
+
+      if (
+        parseInt(formatEther(bigBlindAllowance)) < buyIn &&
+        parseInt(formatEther(bigBlindBlanace)) >= buyIn
+      ) {
+        setAllowMore(true);
+        setCreatingHand(false);
+        return;
+      }
+
       if (bigBlindBlanace > bigBlindAllowance)
         bigBlindBlanace = bigBlindAllowance;
 
@@ -173,6 +188,36 @@ function CreateHand({
     }
   };
 
+  const approveTokenAllowance = async () => {
+    setIsApproving(true);
+    const client = await walletClient;
+    const abi = Degen.abi;
+
+    try {
+      const { request } = await publicClient.simulateContract({
+        address: degenContract,
+        abi,
+        functionName: 'approve',
+        args: [hodlemContract, parseEther(balance as string)],
+        account: address as `0x${string}`,
+      });
+
+      const hash = (await client?.writeContract(
+        request as any
+      )) as `0x${string}`;
+
+      await publicClient.waitForTransactionReceipt({
+        hash,
+      });
+
+      setIsApproving(false);
+      setAllowMore(false);
+    } catch (e) {
+      toast.error('Error approving token allowance');
+      setIsApproving(false);
+    }
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -182,15 +227,22 @@ function CreateHand({
         <DialogHeader>
           <DialogTitle>Create Buy-in</DialogTitle>
           <DialogDescription>
-            There is a 100 $DEGEN rake fee. The small blind will have to match
-            your buy-in above this fee.
+            {allowMore
+              ? 'You do not have enough balance to buy-in. You can top up your balance by allowing Hodlem to spend your $DEGEN.'
+              : 'There is a 100 $DEGEN rake fee. The small blind will have to match your buy-in above this fee.'}
           </DialogDescription>
         </DialogHeader>
-        <CreateHandForm
-          handleCreateHand={handleCreateHand}
-          creatingHand={creatingHand}
-          opposingStack={900}
-        />
+        {allowMore ? (
+          <Button disabled={isApproving} onClick={approveTokenAllowance}>
+            {isApproving ? 'Approving...' : 'Approve $DEGEN'}
+          </Button>
+        ) : (
+          <CreateHandForm
+            handleCreateHand={handleCreateHand}
+            creatingHand={creatingHand}
+            opposingStack={900}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );
