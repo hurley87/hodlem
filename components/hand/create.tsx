@@ -189,6 +189,7 @@ function CreateHand({
         <CreateHandForm
           handleCreateHand={handleCreateHand}
           creatingHand={creatingHand}
+          opposingStack={900}
         />
       </DialogContent>
     </Dialog>

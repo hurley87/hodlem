@@ -112,6 +112,7 @@ function BetHand({
         <CreateHandForm
           handleCreateHand={handleBetHand}
           creatingHand={creatingBet}
+          opposingStack={opposingStack as number}
         />
       </DialogContent>
     </Dialog>

@@ -45,11 +45,13 @@ export default function Hand({
   const noOpponent =
     smallBlindBetTotal === 0 &&
     bigBlindBetTotal > 0 &&
-    hand?.stage !== 'preFlop';
+    hand?.stage === 'created';
   const hasDealt = hand?.bigBlindCards;
   const isSmallBlind = hand?.smallBlind === player;
   const opposingStack = isSmallBlind ? bigBlindStack : smallBlindStack;
   const activeStack = isSmallBlind ? smallBlindStack : bigBlindStack;
+
+  console.log('hand', hand);
 
   useEffect(() => {
     async function getOnchainHand() {

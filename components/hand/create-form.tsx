@@ -8,9 +8,11 @@ import { Slider } from '@/components/ui/slider';
 function CreateHandForm({
   handleCreateHand,
   creatingHand,
+  opposingStack,
 }: {
   handleCreateHand: (buy: number) => void;
   creatingHand: boolean;
+  opposingStack: number;
 }) {
   const [buy, setBuy] = useState(100);
 
@@ -21,7 +23,7 @@ function CreateHandForm({
         <Slider
           value={[buy]}
           onValueChange={(e) => setBuy(e[0])}
-          max={900}
+          max={opposingStack}
           step={100}
           min={100}
         />

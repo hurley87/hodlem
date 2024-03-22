@@ -48,6 +48,7 @@ export const create = mutation({
       bigBlindBetTotal,
       smallBlindBetTotal: 0,
       isActive: true,
+      stage: 'created',
     });
   },
 });
