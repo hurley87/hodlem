@@ -176,7 +176,7 @@ function CreateHand({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="w-full">Create hand</Button>
+        <Button>Create hand</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
