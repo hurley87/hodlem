@@ -48,7 +48,9 @@ export default function Share({
             </h4>
             <div className="grid gap-6">
               {challengers.map((challenger: `0x${string}`) => {
-                return <Challenger id={id} address={challenger} />;
+                return (
+                  <Challenger key={challenger} id={id} address={challenger} />
+                );
               })}
             </div>
           </div>
