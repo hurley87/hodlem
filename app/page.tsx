@@ -26,12 +26,13 @@ export default function Home() {
           <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
             <div className="absolute inset-0 bg-zinc-900" />
             <div className="relative z-20 flex items-center text-lg font-medium">
-              hodl'em
+              hodl&apos;em
             </div>
             <div className="relative z-20 mt-auto">
               <blockquote className="space-y-2">
                 <p className="text-lg">
-                  &ldquo;Hodl'em is to stud what chess is to checkers&rdquo;
+                  &ldquo;Hodl&apos;em is to stud what chess is to
+                  checkers&rdquo;
                 </p>
                 <footer className="text-sm">Johnny Moss</footer>
               </blockquote>
@@ -44,13 +45,13 @@ export default function Home() {
                   Create a Game
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  You'll have to invite a friend to play after
+                  You&apos;ll have to invite a friend to play after
                 </p>
               </div>
               <GameCreate />
               <p className="px-8 text-center text-sm text-muted-foreground">
-                The game is Heads Up Texas Hold'em and you'll start as the big
-                blind after you create the buy-in.
+                The game is Heads Up Texas Hold&apos;em and you'll start as the
+                big blind after you create the buy-in.
               </p>
             </div>
           </div>
