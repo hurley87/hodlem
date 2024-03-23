@@ -52,8 +52,12 @@ export const addSmallBlind = mutation({
     smallBlind: v.string(),
   },
   handler: async (ctx, { id, smallBlind }) => {
+    const game = await ctx.db.get(id);
+    const bigBlind =
+      game.bigBlind === smallBlind ? game.smallBlind : game.bigBlind;
     await ctx.db.patch(id, {
       smallBlind,
+      bigBlind,
     });
   },
 });
