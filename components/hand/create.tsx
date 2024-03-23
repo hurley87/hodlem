@@ -76,6 +76,9 @@ function CreateHand({
       bigBlindBetTotal,
     });
 
+    await addSmallBlind({ id: gameId, smallBlind });
+
+    setCreatingHand(false);
     setHandCreated(true);
   };
 
@@ -133,7 +136,6 @@ function CreateHand({
         args: [bigBlind],
       })) as bigint;
 
-      console.log('bigBlindBlanace', bigBlindBlanace);
       setBalance(formatEther(bigBlindBlanace));
 
       if (
@@ -177,10 +179,6 @@ function CreateHand({
       await publicClient.waitForTransactionReceipt({
         hash,
       });
-
-      await addSmallBlind({ id: gameId, smallBlind });
-
-      setCreatingHand(false);
     } catch (e) {
       toast.error('Error creating hand');
       setCreatingHand(false);

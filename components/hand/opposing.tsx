@@ -30,6 +30,8 @@ function OpposingPlayer({ handId, stack }: Props) {
 
   if (!profile) return null;
 
+  console.log('hand', hand);
+
   return (
     <Card>
       <CardHeader>
@@ -49,7 +51,7 @@ function OpposingPlayer({ handId, stack }: Props) {
           </div>
         </CardDescription>
       </CardHeader>
-      {hand?.stage === 'over' && (
+      {hand?.stage === 'over' && hand?.result !== 'fold' && (
         <CardContent>
           <Cards cards={cards} />
         </CardContent>

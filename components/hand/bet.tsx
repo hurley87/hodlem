@@ -91,8 +91,7 @@ function BetHand({
       });
 
       setCreatingBet(false);
-    } catch (e) {
-      console.log('EEEE', e);
+    } catch {
       toast.error('Error creating bet');
       setCreatingBet(false);
       return;

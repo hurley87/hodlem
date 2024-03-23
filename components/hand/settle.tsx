@@ -38,8 +38,7 @@ function SettleHand({ id, onchainId }: Props) {
       toast.success('Hand settled');
 
       setIsSettling(false);
-    } catch (e) {
-      console.log('e', e);
+    } catch {
       toast.error('Error creating hand');
       setIsSettling(false);
       return;

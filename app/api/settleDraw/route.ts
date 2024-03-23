@@ -37,9 +37,7 @@ export async function POST(request: NextRequest) {
     await publicClient.waitForTransactionReceipt({
       hash,
     });
-  } catch (e) {
-    console.log('e', e);
-  }
+  } catch {}
 
   return NextResponse.json({ hash }, { status: 200 });
 }

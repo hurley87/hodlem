@@ -149,7 +149,7 @@ function ActivePlayer({ handId, activeStack, opposingStack }: Props) {
           />
         )}
         {canNewHand && isActivePlayer && <NewHand id={hand._id} />}
-        {hand.hash && (
+        {hand.hash && isActivePlayer && (
           <Link target="_blank" href={`https://basescan.org/tx/${hand.hash}`}>
             <Button variant="outline">View Transaction</Button>
           </Link>
