@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 import { RoomProvider } from '@/liveblocks.config';
 import { ClientSideSuspense } from '@liveblocks/react';
 import { Id } from '@/convex/_generated/dataModel';
+import Loading from '@/components/loading';
 
 export function Room({
   children,
@@ -13,7 +14,7 @@ export function Room({
 }) {
   return (
     <RoomProvider id={gameId} initialPresence={{ cursor: null }}>
-      <ClientSideSuspense fallback={<div>Loading…</div>}>
+      <ClientSideSuspense fallback={<Loading />}>
         {() => children}
       </ClientSideSuspense>
     </RoomProvider>
