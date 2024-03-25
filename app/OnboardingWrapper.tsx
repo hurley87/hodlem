@@ -13,6 +13,7 @@ import ConnectWallet from '@/components/onboarding/connect';
 import LinkFarcaster from '@/components/onboarding/link';
 import FundAccount from '@/components/onboarding/fund';
 import Approve from '@/components/onboarding/approve';
+import Loading from '@/components/loading';
 
 function OnboardingWrapper({ children }: { children: React.ReactNode }) {
   const { user, ready } = usePrivy();
@@ -114,7 +115,7 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
   };
 
   if (!ready && allowance) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   const approveTokenAllowance = async () => {

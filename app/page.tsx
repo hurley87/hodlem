@@ -7,6 +7,7 @@ import { GameInvite } from '@/components/game-invite';
 import { GamePlay } from '@/components/game-play';
 import { GameCreate } from '@/components/game-create';
 import { GameLayout } from '@/components/game-layout';
+import Loading from '@/components/loading';
 
 export default function Home() {
   const { user, ready } = usePrivy();
@@ -16,7 +17,7 @@ export default function Home() {
   });
 
   if (!ready) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (

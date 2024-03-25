@@ -18,6 +18,7 @@ import { Composer, Thread } from '@liveblocks/react-comments';
 import { useThreads, useOthers, useMyPresence } from '@/liveblocks.config';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Cursor } from './cursor';
+import Loading from '@/components/loading';
 
 export default function Game({ params }: { params: { uid: Id<'games'> } }) {
   const gameId = params.uid;
@@ -39,7 +40,7 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
   const [_, updateMyPresence] = useMyPresence();
 
   if (!ready) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   // Update cursor coordinates on pointer move

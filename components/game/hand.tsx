@@ -14,6 +14,7 @@ import { Card, CardDescription, CardHeader } from '../ui/card';
 import Table from '../hand/table';
 import OpposingPlayer from '../hand/opposing';
 import ActivePlayer from '../hand/active';
+import Loading from '../loading';
 
 export default function Hand({
   gameId,
@@ -112,7 +113,7 @@ export default function Hand({
     if (onchainId) getOnchainHand();
   }, [hand]);
 
-  if (!hand) return <div>Loading...</div>;
+  if (!hand) return <Loading />;
 
   if (isBigBlind && noOpponent)
     return <CancelHand id={handId} onchainId={onchainId} gameId={gameId} />;
