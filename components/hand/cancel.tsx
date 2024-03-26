@@ -26,10 +26,10 @@ function CancelHand({
   const cancelHand = useMutation(api.hands.cancel);
   const swap = useMutation(api.games.swap);
   const onchain = useChain({ address });
+  const { toast } = useToast();
 
   async function handleCancelHand() {
     setIsCancelling(true);
-    const { toast } = useToast();
 
     try {
       const receipt = await onchain?.cancel({

@@ -38,12 +38,12 @@ function RaiseHand({
   const betHand = useMutation(api.hands.bet);
   const degen = useRead();
   const onchain = useChain({ address });
+  const { toast } = useToast();
 
   const handleRaiseHand = async (raiseAmount: number) => {
     setCreatingBet(true);
     const betTotal = parseInt(betAmount) + raiseAmount;
     const totalBetAmount = parseEther(betTotal.toString());
-    const { toast } = useToast();
 
     if (isNaN(raiseAmount) || raiseAmount < Number(betAmount)) {
       toast({
