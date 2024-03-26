@@ -56,7 +56,7 @@ function FoldHand({
   };
 
   return (
-    <Button onClick={handleFoldHand}>
+    <Button disabled={foldingHand} onClick={handleFoldHand}>
       {foldingHand ? 'Folding...' : 'Fold'}
     </Button>
   );

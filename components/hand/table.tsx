@@ -4,6 +4,7 @@ import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Card, CardContent, CardDescription, CardHeader } from '../ui/card';
 import Cards from './cards';
+import { toHumanReadable } from '@/lib/utils';
 
 type Props = {
   handId: Id<'hands'>;
@@ -29,7 +30,9 @@ function Table({ handId, pot }: Props) {
             {hand.resultMessage}!
           </CardDescription>
         ) : (
-          <CardDescription>Pot: {pot} $DEGEN</CardDescription>
+          <CardDescription>
+            Pot: {toHumanReadable(pot || 0)} $DEGEN
+          </CardDescription>
         )}
       </CardHeader>
       {flopCards && (

@@ -80,11 +80,13 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
             </TabsList>
             <TabsContent value="game">
               {isBigBlind && !hasSmallBlind && (
-                <Share
-                  id={gameId}
-                  challengers={challengers}
-                  address={address}
-                />
+                <div className="w-full max-w-lg mx-auto">
+                  <Share
+                    id={gameId}
+                    challengers={challengers}
+                    address={address}
+                  />
+                </div>
               )}
 
               {!isBigBlind &&
@@ -141,10 +143,12 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
                 />
               )}
             </TabsContent>
-            <TabsContent
-              className="bg-[#f1f5f9] p-1"
-              value="chat"
-            ></TabsContent>
+            <TabsContent className="bg-[#f1f5f9] p-1" value="chat">
+              {threads.reverse().map((thread) => (
+                <Thread key={thread.id} thread={thread} />
+              ))}
+              <Composer />
+            </TabsContent>
           </Tabs>
         </GameLayout>
       </div>
@@ -161,33 +165,39 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
             </div>
             <div className="flex w-full justify-center pt-4">
               {isBigBlind && !hasSmallBlind && (
-                <Share
-                  id={gameId}
-                  challengers={challengers}
-                  address={address}
-                />
+                <div className="w-full max-w-lg mx-auto">
+                  <Share
+                    id={gameId}
+                    challengers={challengers}
+                    address={address}
+                  />
+                </div>
               )}
 
               {!isBigBlind &&
                 !hasSmallBlind &&
                 !challengers?.includes(address) && (
-                  <Challenge
-                    id={gameId}
-                    challengers={challengers}
-                    address={address}
-                  />
+                  <div className="w-full max-w-lg mx-auto">
+                    <Challenge
+                      id={gameId}
+                      challengers={challengers}
+                      address={address}
+                    />
+                  </div>
                 )}
 
               {!isBigBlind &&
                 !hasSmallBlind &&
                 challengers?.includes(address) && (
-                  <Card>
-                    <CardHeader>
-                      <CardDescription>
-                        Waiting on the big blind to set the buy-in ...
-                      </CardDescription>
-                    </CardHeader>
-                  </Card>
+                  <div className="w-full max-w-lg mx-auto">
+                    <Card>
+                      <CardHeader>
+                        <CardDescription>
+                          Waiting on the big blind to set the buy-in ...
+                        </CardDescription>
+                      </CardHeader>
+                    </Card>
+                  </div>
                 )}
 
               {isBigBlind && hasSmallBlind && !activeHand && (
@@ -224,7 +234,7 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
             </div>
           </div>
 
-          <div className="w-full max-w-md flex flex-col h-screen justify-between bg-[#f1f5f9] p-1 text-xs relative">
+          <div className="w-full max-w-md flex flex-col h-screen justify-between bg-[#f1f5f9] p-0.5 text-xs relative">
             <div className="flex flex-col justify-normal overflow-scroll">
               {threads.reverse().map((thread) => (
                 <Thread key={thread.id} thread={thread} />

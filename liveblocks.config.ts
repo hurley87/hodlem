@@ -9,6 +9,27 @@ const client = createClient({
   throttle: 16,
 });
 
+// const client = createClient({
+//   authEndpoint: async (room: any) => {
+//     console.log('authEndpoint', room);
+//     const headers = {
+//       'Content-Type': 'application/json',
+//     };
+
+//     const body = JSON.stringify({
+//       room,
+//     });
+
+//     const response = await fetch('/api/liveblocks-auth', {
+//       method: 'POST',
+//       headers,
+//       body,
+//     });
+
+//     return await response.json();
+//   },
+// });
+
 // Presence represents the properties that exist on every user in the Room
 // and that will automatically be kept in sync. Accessible through the
 // `user.presence` property. Must be JSON-serializable.

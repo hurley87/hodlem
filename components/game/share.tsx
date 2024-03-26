@@ -46,7 +46,7 @@ export default function Share({
         {challengers?.length > 0 && (
           <div className="space-y-4">
             <h4 className="text-sm font-medium">
-              Accept a challenge and set the buy-in
+              Create hand and set the buy-in
             </h4>
             <div className="grid gap-6">
               {challengers.map((challenger: `0x${string}`) => {

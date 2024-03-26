@@ -72,7 +72,7 @@ function CancelHand({
     <Card>
       <CardHeader>
         <CardDescription>
-          Waiting on the small blind to buy-in ...
+          Cancel this hand in the any time before smoeone joins
         </CardDescription>
       </CardHeader>
       <CardContent>

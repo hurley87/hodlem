@@ -26,12 +26,12 @@ export default function Challenge({
     <Card>
       <CardHeader>
         <CardDescription>
-          Ask to join this game as the small blind
+          Request to join this game as the small blind.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Button className="w-full" onClick={handleChallenge}>
-          Ask
+          Request
         </Button>
       </CardContent>
     </Card>
