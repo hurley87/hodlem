@@ -2,14 +2,17 @@
 import { Button } from '../ui/button';
 import { usePrivy } from '@privy-io/react-auth';
 import Link from 'next/link';
-import toast from 'react-hot-toast';
+import { useToast } from '../ui/use-toast';
 
 function FundAccount() {
   const { user } = usePrivy();
+  const { toast } = useToast();
 
   const copyAddress = () => {
     navigator.clipboard.writeText(user?.wallet?.address as string);
-    toast.success('Address copied to clipboard');
+    toast({
+      description: 'Address copied to clipboard',
+    });
   };
 
   return (

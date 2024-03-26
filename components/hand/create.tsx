@@ -1,11 +1,7 @@
 'use client';
-import toast from 'react-hot-toast';
-import { usePrivy, useWallets } from '@privy-io/react-auth';
+import { usePrivy } from '@privy-io/react-auth';
 import { useState } from 'react';
-import useWalletClient from '@/hooks/useWalletClient';
-import { chain } from '@/constants/chain';
-import { createPublicClient, formatEther, http, parseEther } from 'viem';
-import Degen from '@/hooks/abis/Degen.json';
+import { formatEther, parseEventLogs } from 'viem';
 import Hodlem from '@/hooks/abis/Hodlem.json';
 import { api } from '@/convex/_generated/api';
 import { useMutation } from 'convex/react';
@@ -21,6 +17,11 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import CreateHandForm from './create-form';
+import useRead from '@/hooks/useRead';
+import useChain from '@/hooks/useChain';
+import { useToast } from '../ui/use-toast';
+import Link from 'next/link';
+import { ToastAction } from '../ui/toast';
 
 function CreateHand({
   gameId,
@@ -31,156 +32,133 @@ function CreateHand({
 }) {
   const { user } = usePrivy();
   const [creatingHand, setCreatingHand] = useState(false);
-  const degenContract = process.env.NEXT_PUBLIC_DEGEN_CONTRACT as `0x${string}`;
-  const [handCreated, setHandCreated] = useState(false);
-  const { wallets } = useWallets();
-  const publicClient = createPublicClient({
-    chain,
-    transport: http(),
-  });
   const address = user?.wallet?.address as `0x${string}`;
-  const wallet = wallets.filter((wallet) => wallet?.address === address)[0];
-  const walletClient = useWalletClient({ chain, wallet });
-  const hodlemContract = process.env
-    .NEXT_PUBLIC_HODLEM_CONTRACT as `0x${string}`;
   const createHand = useMutation(api.hands.create);
   const addSmallBlind = useMutation(api.games.addSmallBlind);
   const [allowMore, setAllowMore] = useState(false);
   const [balance, setBalance] = useState<string>('0');
   const [isApproving, setIsApproving] = useState(false);
-
-  publicClient.watchContractEvent({
-    address: hodlemContract,
-    abi: Hodlem.abi,
-    eventName: 'HandCreated',
-    onLogs: (logs: any) => {
-      const { handId, betAmount } = logs[0].args;
-      handleCreate(`${handId}`, formatEther(betAmount));
-    },
-  });
-
-  const handleCreate = async (onchainId: string, betAmount: string) => {
-    const bigBlindBetTotal = Number(betAmount);
-    const hand = await fetchQuery(api.hands.getHandByOnchainId, {
-      onchainId,
-    });
-
-    if (hand?.length === 1) {
-      return;
-    }
-    if (handCreated) return;
-
-    await createHand({
-      onchainId,
-      gameId,
-      bigBlindBetTotal,
-    });
-
-    await addSmallBlind({ id: gameId, smallBlind });
-
-    setCreatingHand(false);
-    setHandCreated(true);
-  };
+  const degen = useRead();
+  const onchain = useChain({ address });
+  const { toast } = useToast();
 
   const handleCreateHand = async (buyIn: number) => {
-    if (!walletClient) {
-      toast.error('No wallet connected');
-      return;
-    }
-
-    const client = await walletClient;
-    const bigBlind = wallet?.address as `0x${string}`;
+    const bigBlind = address;
 
     if (smallBlind === bigBlind) {
-      toast.error('You cannot play against yourself');
+      toast({
+        title: 'Error',
+        description: 'You cannot play against yourself',
+        variant: 'destructive',
+      });
       return;
     }
 
     setCreatingHand(true);
 
     try {
-      const a1 = await publicClient.readContract({
-        address: degenContract,
-        abi: Degen.abi,
-        functionName: 'allowance',
-        args: [smallBlind, hodlemContract],
-      });
+      const smallBlindAllowance = await degen?.getAllowance(smallBlind);
 
-      const smallBlindAllowance = a1 as bigint;
+      let smallBlindBalance = await degen?.getBalance(smallBlind);
 
-      let smallBlindBalance = (await publicClient.readContract({
-        address: degenContract,
-        abi: Degen.abi,
-        functionName: 'balanceOf',
-        args: [smallBlind],
-      })) as bigint;
-
-      if (smallBlindBalance > smallBlindAllowance)
+      if (Number(smallBlindBalance) > Number(smallBlindAllowance))
         smallBlindBalance = smallBlindAllowance;
 
-      const smallBlindStack = parseInt(formatEther(smallBlindBalance));
+      const smallBlindStack = parseInt(
+        formatEther(smallBlindBalance as bigint)
+      );
 
-      const a2 = await publicClient.readContract({
-        address: degenContract,
-        abi: Degen.abi,
-        functionName: 'allowance',
-        args: [bigBlind, hodlemContract],
-      });
+      const bigBlindAllowance = await degen?.getAllowance(address);
 
-      const bigBlindAllowance = a2 as bigint;
+      let bigBlindBlanace = await degen?.getBalance(address);
 
-      let bigBlindBlanace = (await publicClient.readContract({
-        address: degenContract,
-        abi: Degen.abi,
-        functionName: 'balanceOf',
-        args: [bigBlind],
-      })) as bigint;
-
-      setBalance(formatEther(bigBlindBlanace));
+      setBalance(formatEther(bigBlindBlanace as bigint));
 
       if (
-        parseInt(formatEther(bigBlindAllowance)) < buyIn &&
-        parseInt(formatEther(bigBlindBlanace)) >= buyIn
+        Number(bigBlindAllowance) < buyIn &&
+        Number(bigBlindBlanace) >= buyIn
       ) {
         setAllowMore(true);
         setCreatingHand(false);
         return;
       }
 
-      if (bigBlindBlanace > bigBlindAllowance)
+      if (Number(bigBlindBlanace) > Number(bigBlindAllowance))
         bigBlindBlanace = bigBlindAllowance;
 
-      const bigBlindStack = parseInt(formatEther(bigBlindBlanace));
+      const bigBlindStack = parseInt(formatEther(bigBlindBlanace as bigint));
 
       if (smallBlindStack < buyIn) {
-        toast.error('Small blind cannot afford this buy-in');
+        toast({
+          title: 'Error',
+          description: 'Small blind cannot afford this buy-in',
+          variant: 'destructive',
+        });
         setCreatingHand(false);
         return;
       }
 
       if (bigBlindStack < buyIn) {
-        toast.error('You do not have enough allowance to make this bet');
+        toast({
+          title: 'Error',
+          description: 'You do not have enough allowance to make this bet',
+          variant: 'destructive',
+        });
         setCreatingHand(false);
         return;
       }
 
-      const { request } = await publicClient.simulateContract({
-        address: hodlemContract,
+      const receipt = await onchain?.createHand({
+        buyIn: buyIn.toString(),
+        smallBlind,
+      });
+
+      toast({
+        title: 'Success',
+        description: 'Hand created onchain',
+        action: (
+          <Link
+            target="_blank"
+            href={`https://basescan.org/tx/${receipt?.transactionHash}`}
+          >
+            <ToastAction altText="Try again">View transaction</ToastAction>
+          </Link>
+        ),
+      });
+
+      const logs = receipt?.logs as any;
+
+      const receiptLogs = parseEventLogs({
         abi: Hodlem.abi,
-        functionName: 'createHand',
-        args: [parseEther(buyIn.toString()), smallBlind],
-        account: address,
+        logs,
+      }) as any;
+
+      const { handId, betAmount } = receiptLogs[0].args;
+      const onchainId = `${handId}`;
+      const bigBlindBetTotal = Number(formatEther(betAmount));
+      const hand = await fetchQuery(api.hands.getHandByOnchainId, {
+        onchainId,
       });
 
-      const hash = (await client?.writeContract(
-        request as any
-      )) as `0x${string}`;
+      if (hand?.length === 1) {
+        return;
+      }
 
-      await publicClient.waitForTransactionReceipt({
-        hash,
+      await createHand({
+        onchainId,
+        gameId,
+        bigBlindBetTotal,
       });
-    } catch (e) {
-      toast.error('Error creating hand');
+
+      await addSmallBlind({ id: gameId, smallBlind });
+
+      setCreatingHand(false);
+    } catch {
+      toast({
+        title: 'Error',
+        description: 'Error creating hand',
+        variant: 'destructive',
+      });
       setCreatingHand(false);
       return;
     }
@@ -188,30 +166,32 @@ function CreateHand({
 
   const approveTokenAllowance = async () => {
     setIsApproving(true);
-    const client = await walletClient;
-    const abi = Degen.abi;
-
     try {
-      const { request } = await publicClient.simulateContract({
-        address: degenContract,
-        abi,
-        functionName: 'approve',
-        args: [hodlemContract, parseEther(balance as string)],
-        account: address as `0x${string}`,
+      const receipt = await onchain?.approve({
+        balance,
       });
 
-      const hash = (await client?.writeContract(
-        request as any
-      )) as `0x${string}`;
-
-      await publicClient.waitForTransactionReceipt({
-        hash,
+      toast({
+        title: 'Success',
+        description: 'Token transfer approved',
+        action: (
+          <Link
+            target="_blank"
+            href={`https://basescan.org/tx/${receipt?.transactionHash}`}
+          >
+            <ToastAction altText="Try again">View transaction</ToastAction>
+          </Link>
+        ),
       });
 
       setIsApproving(false);
       setAllowMore(false);
     } catch (e) {
-      toast.error('Error approving token allowance');
+      toast({
+        title: 'Error',
+        description: 'Error approving token allowance',
+        variant: 'destructive',
+      });
       setIsApproving(false);
     }
   };

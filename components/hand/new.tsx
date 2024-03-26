@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { Id } from '@/convex/_generated/dataModel';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
-import toast from 'react-hot-toast';
 import { Button } from '../ui/button';
+import { useToast } from '../ui/use-toast';
 
 type Props = {
   id: Id<'hands'>;
@@ -13,6 +13,7 @@ type Props = {
 function NewHand({ id }: Props) {
   const [isClaiming, setIsClaiming] = useState(false);
   const newHand = useMutation(api.hands.newHand);
+  const { toast } = useToast();
 
   async function handleNewHand() {
     setIsClaiming(true);
@@ -24,7 +25,12 @@ function NewHand({ id }: Props) {
 
       setIsClaiming(false);
     } catch (e) {
-      toast.error('Error creating hand');
+      toast({
+        title: 'Error',
+        description: 'Error starting new hand',
+        variant: 'destructive',
+      });
+
       setIsClaiming(false);
       return;
     }

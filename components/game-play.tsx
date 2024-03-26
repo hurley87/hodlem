@@ -1,7 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { api } from '@/convex/_generated/api';
+import useProfile from '@/hooks/useProfile';
 import { toHumanReadable } from '@/lib/utils';
-import { useQuery } from 'convex/react';
 import Link from 'next/link';
 
 type Props = {
@@ -10,9 +9,7 @@ type Props = {
 };
 
 export function GamePlay({ gameId, address }: Props) {
-  const profile = useQuery(api.profiles.getByAddress, {
-    address,
-  });
+  const profile = useProfile({ address });
 
   if (!profile) {
     return null;
@@ -31,7 +28,7 @@ export function GamePlay({ gameId, address }: Props) {
               {profile.displayName}
             </div>
             <div className="text-xs text-muted-foreground pt-0.5">
-              {toHumanReadable(parseInt(profile.degen))} $DEGEN
+              {toHumanReadable(profile.balance)} $DEGEN
             </div>
           </div>
         </div>

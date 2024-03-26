@@ -7,6 +7,7 @@ import { Id } from '@/convex/_generated/dataModel';
 import { usePrivy } from '@privy-io/react-auth';
 import { Badge } from '../ui/badge';
 import Cards from './cards';
+import useProfile from '@/hooks/useProfile';
 
 type Props = {
   handId: Id<'hands'>;
@@ -21,16 +22,12 @@ function OpposingPlayer({ handId, stack }: Props) {
   }) as any;
   const address =
     userAddress === hand?.bigBlind ? hand?.smallBlind : hand?.bigBlind;
-  const profile = useQuery(api.profiles.getByAddress, {
-    address,
-  }) as any;
+  const profile = useProfile({ address });
   const isBigBlind = userAddress !== hand?.bigBlind;
   const isActivePlayer = hand?.activePlayer !== userAddress;
   const cards = isBigBlind ? hand?.bigBlindCards : hand?.smallBlindCards;
 
   if (!profile) return null;
-
-  console.log('hand', hand);
 
   return (
     <Card>

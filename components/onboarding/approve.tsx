@@ -1,13 +1,51 @@
 'use client';
 import Link from 'next/link';
 import { Button } from '../ui/button';
+import { useState } from 'react';
+import { usePrivy } from '@privy-io/react-auth';
+import useChain from '@/hooks/useChain';
+import { useToast } from '../ui/use-toast';
+import { ToastAction } from '../ui/toast';
 
-type Props = {
-  approveTokenAllowance: () => void;
-  isApproving: boolean;
-};
+function Approve({ balance }: { balance: string }) {
+  const { user } = usePrivy();
+  const address = user?.wallet?.address as `0x${string}`;
+  const [isApproving, setIsApproving] = useState(false);
+  const onchain = useChain({ address });
+  const { toast } = useToast();
 
-function Approve({ approveTokenAllowance, isApproving }: Props) {
+  const approveTokenAllowance = async () => {
+    setIsApproving(true);
+
+    try {
+      const receipt = await onchain?.approve({
+        balance,
+      });
+
+      toast({
+        title: 'Success',
+        description: 'Bet made onchain',
+        action: (
+          <Link
+            target="_blank"
+            href={`https://basescan.org/tx/${receipt?.transactionHash}`}
+          >
+            <ToastAction altText="Try again">View transaction</ToastAction>
+          </Link>
+        ),
+      });
+
+      setIsApproving(false);
+    } catch (e) {
+      toast({
+        title: 'Error',
+        description: 'Error approving token allowance',
+        variant: 'destructive',
+      });
+      setIsApproving(false);
+    }
+  };
+
   return (
     <>
       <div className="container relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">

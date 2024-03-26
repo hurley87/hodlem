@@ -9,18 +9,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { api } from '@/convex/_generated/api';
+import useProfile from '@/hooks/useProfile';
 import { toHumanReadable } from '@/lib/utils';
 import { usePrivy } from '@privy-io/react-auth';
-import { useQuery } from 'convex/react';
 import Link from 'next/link';
 
 export function UserNav() {
   const { user, logout } = usePrivy();
   const address = user?.wallet?.address as `0x${string}`;
-  const profile = useQuery(api.profiles.getByAddress, {
-    address,
-  });
+  const profile = useProfile({ address });
+
+  if (!profile) return null;
 
   return (
     <DropdownMenu>
@@ -42,7 +41,8 @@ export function UserNav() {
             </div>
             {profile && (
               <div className="text-xs leading-none text-muted-foreground">
-                {toHumanReadable(parseInt(profile.degen))} $DEGEN
+                {toHumanReadable(profile.allowance)} /{' '}
+                {toHumanReadable(profile.balance)} $DEGEN
               </div>
             )}
           </div>

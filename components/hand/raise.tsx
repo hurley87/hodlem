@@ -1,12 +1,7 @@
 'use client';
-import toast from 'react-hot-toast';
-import { usePrivy, useWallets } from '@privy-io/react-auth';
+import { usePrivy } from '@privy-io/react-auth';
 import { useState } from 'react';
-import useWalletClient from '@/hooks/useWalletClient';
-import { chain } from '@/constants/chain';
-import { createPublicClient, http, parseEther } from 'viem';
-import Degen from '@/hooks/abis/Degen.json';
-import Hodlem from '@/hooks/abis/Hodlem.json';
+import { parseEther } from 'viem';
 import { api } from '@/convex/_generated/api';
 import { useMutation } from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
@@ -20,6 +15,11 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '../ui/button';
 import CreateHandForm from './create-form';
+import useRead from '@/hooks/useRead';
+import useChain from '@/hooks/useChain';
+import { useToast } from '../ui/use-toast';
+import Link from 'next/link';
+import { ToastAction } from '../ui/toast';
 
 function RaiseHand({
   id,
@@ -34,65 +34,65 @@ function RaiseHand({
 }) {
   const { user } = usePrivy();
   const [creatingBet, setCreatingBet] = useState(false);
-  const degenContract = process.env.NEXT_PUBLIC_DEGEN_CONTRACT as `0x${string}`;
-  const { wallets } = useWallets();
-  const publicClient = createPublicClient({
-    chain,
-    transport: http(),
-  });
   const address = user?.wallet?.address as `0x${string}`;
-  const wallet = wallets.filter((wallet) => wallet?.address === address)[0];
-  const walletClient = useWalletClient({ chain, wallet });
-  const hodlemContract = process.env
-    .NEXT_PUBLIC_HODLEM_CONTRACT as `0x${string}`;
   const betHand = useMutation(api.hands.bet);
+  const degen = useRead();
+  const onchain = useChain({ address });
 
   const handleRaiseHand = async (raiseAmount: number) => {
     setCreatingBet(true);
-    const client = await walletClient;
     const betTotal = parseInt(betAmount) + raiseAmount;
     const totalBetAmount = parseEther(betTotal.toString());
+    const { toast } = useToast();
 
     if (isNaN(raiseAmount) || raiseAmount < Number(betAmount)) {
-      toast.error('You must raise more than the original bet');
+      toast({
+        title: 'Error',
+        description: 'You must raise more than the original bet',
+        variant: 'destructive',
+      });
       setCreatingBet(false);
       return;
     }
 
-    const a2 = await publicClient.readContract({
-      address: degenContract,
-      abi: Degen.abi,
-      functionName: 'allowance',
-      args: [address, hodlemContract],
-    });
-    const bigBlindAllowance = a2 as bigint;
+    const bigBlindAllowance = await degen?.getAllowance(address);
 
     if (bigBlindAllowance < totalBetAmount) {
-      toast.error('You do not have enough allowance to make this bet');
+      toast({
+        title: 'Error',
+        description: 'You do not have enough allowance to make this bet',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (Number(betAmount) > opposingStack) {
+      toast({
+        title: 'Error',
+        description: `The max bet is ${opposingStack} $DEGEN`,
+        variant: 'destructive',
+      });
       return;
     }
 
     try {
-      const { request } = await publicClient.simulateContract({
-        address: hodlemContract,
-        abi: Hodlem.abi,
-        functionName: 'makeBet',
-        args: [onchainId, totalBetAmount],
-        account: address,
+      const receipt = await onchain?.bet({
+        onchainId,
+        betAmount: totalBetAmount.toString(),
       });
 
-      const hash = (await client?.writeContract(
-        request as any
-      )) as `0x${string}`;
-
-      await publicClient.waitForTransactionReceipt({
-        hash,
+      toast({
+        title: 'Success',
+        description: 'Bet made onchain',
+        action: (
+          <Link
+            target="_blank"
+            href={`https://basescan.org/tx/${receipt?.transactionHash}`}
+          >
+            <ToastAction altText="Try again">View transaction</ToastAction>
+          </Link>
+        ),
       });
-
-      if (Number(betAmount) > opposingStack) {
-        toast.error(`The max bet is ${opposingStack} $DEGEN`);
-        return;
-      }
 
       await betHand({
         id,
@@ -102,7 +102,11 @@ function RaiseHand({
 
       setCreatingBet(false);
     } catch (e) {
-      toast.error('Error raising hand');
+      toast({
+        title: 'Error',
+        description: 'Error raising hand',
+        variant: 'destructive',
+      });
       setCreatingBet(false);
       return;
     }

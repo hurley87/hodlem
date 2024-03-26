@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { Id } from '@/convex/_generated/dataModel';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
-import toast from 'react-hot-toast';
 import { Button } from '../ui/button';
+import { useToast } from '../ui/use-toast';
 
 type Props = {
   id: Id<'hands'>;
@@ -16,6 +16,7 @@ type Props = {
 function ClaimHand({ id, onchainId, resultMessage, winner }: Props) {
   const [isClaiming, setIsClaiming] = useState(false);
   const showOutput = useMutation(api.hands.showOutput);
+  const { toast } = useToast();
 
   async function handleDealHand() {
     setIsClaiming(true);
@@ -36,11 +37,18 @@ function ClaimHand({ id, onchainId, resultMessage, winner }: Props) {
         hash,
       });
 
-      toast.success('Congrats!');
+      toast({
+        title: 'Congrats!',
+        description: 'You won the hand',
+      });
 
       setIsClaiming(false);
     } catch (e) {
-      toast.error('Error creating hand');
+      toast({
+        title: 'Error',
+        description: 'Error with claim',
+        variant: 'destructive',
+      });
       setIsClaiming(false);
       return;
     }

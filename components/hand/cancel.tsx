@@ -1,16 +1,15 @@
 'use client';
-import toast from 'react-hot-toast';
-import { usePrivy, useWallets } from '@privy-io/react-auth';
+import { usePrivy } from '@privy-io/react-auth';
 import { useState } from 'react';
-import useWalletClient from '@/hooks/useWalletClient';
-import { chain } from '@/constants/chain';
-import { createPublicClient, http } from 'viem';
-import Hodlem from '@/hooks/abis/Hodlem.json';
 import { Id } from '@/convex/_generated/dataModel';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Card, CardContent, CardDescription, CardHeader } from '../ui/card';
 import { Button } from '../ui/button';
+import useChain from '@/hooks/useChain';
+import { useToast } from '../ui/use-toast';
+import Link from 'next/link';
+import { ToastAction } from '../ui/toast';
 
 function CancelHand({
   gameId,
@@ -22,41 +21,19 @@ function CancelHand({
   onchainId: string;
 }) {
   const { user } = usePrivy();
-  const { wallets } = useWallets();
-  const publicClient = createPublicClient({
-    chain,
-    transport: http(),
-  });
   const address = user?.wallet?.address as `0x${string}`;
-  const wallet = wallets.filter((wallet) => wallet?.address === address)[0];
-  const walletClient = useWalletClient({ chain, wallet });
-  const hodlemContract = process.env
-    .NEXT_PUBLIC_HODLEM_CONTRACT as `0x${string}`;
   const [isCancelling, setIsCancelling] = useState(false);
   const cancelHand = useMutation(api.hands.cancel);
   const swap = useMutation(api.games.swap);
+  const onchain = useChain({ address });
 
   async function handleCancelHand() {
     setIsCancelling(true);
-
-    const client = await walletClient;
-    const account = address;
+    const { toast } = useToast();
 
     try {
-      const { request } = await publicClient.simulateContract({
-        address: hodlemContract,
-        abi: Hodlem.abi,
-        functionName: 'cancelHand',
-        args: [onchainId],
-        account,
-      });
-
-      const hash = (await client?.writeContract(
-        request as any
-      )) as `0x${string}`;
-
-      await publicClient.waitForTransactionReceipt({
-        hash,
+      const receipt = await onchain?.cancel({
+        onchainId,
       });
 
       await cancelHand({
@@ -68,9 +45,26 @@ function CancelHand({
         currentBigBlind: address,
       });
 
+      toast({
+        title: 'Success',
+        description: 'Hand cancelled',
+        action: (
+          <Link
+            target="_blank"
+            href={`https://basescan.org/tx/${receipt?.transactionHash}`}
+          >
+            <ToastAction altText="Try again">View transaction</ToastAction>
+          </Link>
+        ),
+      });
+
       setIsCancelling(false);
     } catch {
-      toast.error('Error creating hand');
+      toast({
+        title: 'Error',
+        description: `Error cancelling hand`,
+        variant: 'destructive',
+      });
       setIsCancelling(false);
     }
   }

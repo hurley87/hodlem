@@ -4,20 +4,19 @@ import { Card, CardContent, CardDescription, CardHeader } from '../ui/card';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
-import toast from 'react-hot-toast';
 import Challenger from './challenger';
+import { useToast } from '../ui/use-toast';
 
 export default function Share({
   id,
   challengers,
-  isBigBlind,
 }: {
   id: Id<'games'>;
   challengers: `0x${string}`[];
   address: `0x${string}`;
-  isBigBlind: boolean;
 }) {
   const url = `${window.origin}/game/${id}`;
+  const { toast } = useToast();
 
   return (
     <Card>
@@ -32,7 +31,10 @@ export default function Share({
           <Button
             onClick={() => {
               navigator.clipboard.writeText(url);
-              toast.success('Link copied');
+              toast({
+                title: 'Link copied',
+                description: 'Send it to a friend',
+              });
             }}
             variant="secondary"
             className="shrink-0"

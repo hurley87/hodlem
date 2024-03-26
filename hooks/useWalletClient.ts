@@ -1,4 +1,4 @@
-import toast from 'react-hot-toast';
+import { useToast } from '@/components/ui/use-toast';
 import {
   type WalletClient,
   createWalletClient,
@@ -12,6 +12,8 @@ type WalletClientType = {
 };
 
 const useWalletClient = async ({ chain, wallet }: WalletClientType) => {
+  const { toast } = useToast();
+
   if (!wallet) return null;
 
   try {
@@ -30,7 +32,11 @@ const useWalletClient = async ({ chain, wallet }: WalletClientType) => {
 
     return walletClient as WalletClient;
   } catch (e) {
-    toast.error('Error, switch to the Base network');
+    toast({
+      title: 'Error',
+      description: 'switch to the Base network',
+      variant: 'destructive',
+    });
   }
 };
 

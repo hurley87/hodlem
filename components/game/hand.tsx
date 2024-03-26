@@ -15,6 +15,7 @@ import Table from '../hand/table';
 import OpposingPlayer from '../hand/opposing';
 import ActivePlayer from '../hand/active';
 import Loading from '../loading';
+import useRead from '@/hooks/useRead';
 
 export default function Hand({
   gameId,
@@ -39,7 +40,6 @@ export default function Hand({
   const [pot, setPot] = useState<number>();
   const hodlemContract = process.env
     .NEXT_PUBLIC_HODLEM_CONTRACT as `0x${string}`;
-  const degenContract = process.env.NEXT_PUBLIC_DEGEN_CONTRACT as `0x${string}`;
   const onchainId = hand?.onchainId;
   const bigBlindBetTotal = hand?.bigBlindBetTotal;
   const smallBlindBetTotal = hand?.smallBlindBetTotal;
@@ -51,6 +51,7 @@ export default function Hand({
   const isSmallBlind = hand?.smallBlind === player;
   const opposingStack = isSmallBlind ? bigBlindStack : smallBlindStack;
   const activeStack = isSmallBlind ? smallBlindStack : bigBlindStack;
+  const degen = useRead();
 
   useEffect(() => {
     async function getOnchainHand() {
@@ -69,45 +70,21 @@ export default function Hand({
         );
         setPot(totalPot);
 
-        const smallBlindAllowance = (await publicClient.readContract({
-          address: degenContract,
-          abi: Degen.abi,
-          functionName: 'allowance',
-          args: [hand?.smallBlind, hodlemContract],
-        })) as bigint;
-
-        const bigBlindAllowance = (await publicClient.readContract({
-          address: degenContract,
-          abi: Degen.abi,
-          functionName: 'allowance',
-          args: [hand?.bigBlind, hodlemContract],
-        })) as bigint;
-
-        let bigBlindBlanace = (await publicClient.readContract({
-          address: degenContract,
-          abi: Degen.abi,
-          functionName: 'balanceOf',
-          args: [hand?.bigBlind],
-        })) as bigint;
+        const bigBlindAllowance = await degen.getAllowance(hand?.bigBlind);
+        let bigBlindBlanace = await degen.getBalance(hand?.bigBlind);
 
         if (bigBlindBlanace > bigBlindAllowance)
           bigBlindBlanace = bigBlindAllowance;
 
-        const bigBlindStack = parseInt(formatEther(bigBlindBlanace));
-        setBigBlindStack(bigBlindStack);
+        setBigBlindStack(Number(formatEther(bigBlindBlanace)));
 
-        let smallBlindBalance = (await publicClient.readContract({
-          address: degenContract,
-          abi: Degen.abi,
-          functionName: 'balanceOf',
-          args: [hand?.smallBlind],
-        })) as bigint;
+        const smallBlindAllowance = await degen.getAllowance(hand?.smallBlind);
+        let smallBlindBalance = await degen.getBalance(hand?.smallBlind);
 
         if (smallBlindBalance > smallBlindAllowance)
           smallBlindBalance = smallBlindAllowance;
 
-        const smallBlindStack = parseInt(formatEther(smallBlindBalance));
-        setSmallBlindStack(smallBlindStack);
+        setSmallBlindStack(Number(formatEther(smallBlindBalance)));
       } catch {}
     }
     if (onchainId) getOnchainHand();
@@ -116,36 +93,48 @@ export default function Hand({
   if (!hand) return <Loading />;
 
   if (isBigBlind && noOpponent)
-    return <CancelHand id={handId} onchainId={onchainId} gameId={gameId} />;
+    return (
+      <div className="w-full max-w-lg mx-auto">
+        <CancelHand id={handId} onchainId={onchainId} gameId={gameId} />
+      </div>
+    );
 
   if (!isBigBlind && noOpponent)
     return (
-      <JoinHand
-        id={handId}
-        onchainId={onchainId}
-        bigBlindBetTotal={bigBlindBetTotal}
-      />
+      <div className="w-full max-w-lg mx-auto">
+        <JoinHand
+          id={handId}
+          onchainId={onchainId}
+          bigBlindBetTotal={bigBlindBetTotal}
+        />
+      </div>
     );
 
   if (!hasDealt) {
     return (
       <>
-        {isBigBlind && <DealHand id={handId} gameId={gameId} />}
+        {isBigBlind && (
+          <div className="w-full max-w-lg mx-auto">
+            <DealHand id={handId} gameId={gameId} />
+          </div>
+        )}
         {!isBigBlind && (
-          <Card>
-            <CardHeader>
-              <CardDescription>
-                Waiting on the other player to act ...
-              </CardDescription>
-            </CardHeader>
-          </Card>
+          <div className="w-full max-w-lg mx-auto ">
+            <Card>
+              <CardHeader>
+                <CardDescription>
+                  Waiting on the other player to act ...
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
         )}
       </>
     );
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="w-full max-w-lg mx-auto flex flex-col gap-2">
       <OpposingPlayer handId={handId} stack={opposingStack} />
       <Table handId={handId} pot={pot} />
       <ActivePlayer

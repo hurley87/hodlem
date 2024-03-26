@@ -19,6 +19,8 @@ import { useThreads, useOthers, useMyPresence } from '@/liveblocks.config';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Cursor } from './cursor';
 import Loading from '@/components/loading';
+import Link from 'next/link';
+import { UserNav } from '@/components/user-nav';
 
 export default function Game({ params }: { params: { uid: Id<'games'> } }) {
   const gameId = params.uid;
@@ -65,39 +67,62 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
             y={presence?.cursor?.y as number}
           />
         ))}
-      <GameLayout>
-        <Tabs defaultValue="game" className="w-full pb-10">
-          <TabsList className="w-full">
-            <TabsTrigger className="w-full" value="game">
-              Game
-            </TabsTrigger>
-            <TabsTrigger className="w-full" value="chat">
-              Chat
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="game">
-            {isBigBlind && !hasSmallBlind && (
-              <Share
-                id={gameId}
-                challengers={challengers}
-                address={address}
-                isBigBlind={isBigBlind}
-              />
-            )}
-
-            {!isBigBlind &&
-              !hasSmallBlind &&
-              !challengers?.includes(address) && (
-                <Challenge
+      <div className="w-full pb-10 block lg:hidden">
+        <GameLayout>
+          <Tabs defaultValue="game">
+            <TabsList className="w-full">
+              <TabsTrigger className="w-full" value="game">
+                Game
+              </TabsTrigger>
+              <TabsTrigger className="w-full" value="chat">
+                Chat
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="game">
+              {isBigBlind && !hasSmallBlind && (
+                <Share
                   id={gameId}
                   challengers={challengers}
                   address={address}
                 />
               )}
 
-            {!isBigBlind &&
-              !hasSmallBlind &&
-              challengers?.includes(address) && (
+              {!isBigBlind &&
+                !hasSmallBlind &&
+                !challengers?.includes(address) && (
+                  <Challenge
+                    id={gameId}
+                    challengers={challengers}
+                    address={address}
+                  />
+                )}
+
+              {!isBigBlind &&
+                !hasSmallBlind &&
+                challengers?.includes(address) && (
+                  <Card>
+                    <CardHeader>
+                      <CardDescription>
+                        Waiting on the big blind to set the buy-in ...
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                )}
+
+              {isBigBlind && hasSmallBlind && !activeHand && (
+                <Card>
+                  <CardHeader>
+                    <CardDescription>
+                      Start by creating a buy-in for the small blind ...
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <CreateHand gameId={gameId} smallBlind={game?.smallBlind} />
+                  </CardContent>
+                </Card>
+              )}
+
+              {!isBigBlind && hasSmallBlind && !activeHand && (
                 <Card>
                   <CardHeader>
                     <CardDescription>
@@ -107,46 +132,108 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
                 </Card>
               )}
 
-            {isBigBlind && hasSmallBlind && !activeHand && (
-              <Card>
-                <CardHeader>
-                  <CardDescription>
-                    Start by creating a buy-in for the small blind ...
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <CreateHand gameId={gameId} smallBlind={game?.smallBlind} />
-                </CardContent>
-              </Card>
-            )}
+              {hasSmallBlind && activeHand && (
+                <Hand
+                  isBigBlind={isBigBlind}
+                  handId={activeHand._id}
+                  gameId={gameId}
+                  player={address}
+                />
+              )}
+            </TabsContent>
+            <TabsContent
+              className="bg-[#f1f5f9] p-1"
+              value="chat"
+            ></TabsContent>
+          </Tabs>
+        </GameLayout>
+      </div>
+      <div className="min-h-screen h-full hidden lg:flex">
+        <div className="w-full lg:flex justify-between">
+          <div className="w-full">
+            <div className="border-b">
+              <div className="px-2 md:container flex h-14 max-w-screen-2xl items-center justify-between w-full">
+                <Link href="/">
+                  <h1 className="font-bold">hodl&apos;em</h1>
+                </Link>
+                <UserNav />
+              </div>
+            </div>
+            <div className="flex w-full justify-center pt-4">
+              {isBigBlind && !hasSmallBlind && (
+                <Share
+                  id={gameId}
+                  challengers={challengers}
+                  address={address}
+                />
+              )}
 
-            {!isBigBlind && hasSmallBlind && !activeHand && (
-              <Card>
-                <CardHeader>
-                  <CardDescription>
-                    Waiting on the big blind to set the buy-in ...
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            )}
+              {!isBigBlind &&
+                !hasSmallBlind &&
+                !challengers?.includes(address) && (
+                  <Challenge
+                    id={gameId}
+                    challengers={challengers}
+                    address={address}
+                  />
+                )}
 
-            {hasSmallBlind && activeHand && (
-              <Hand
-                isBigBlind={isBigBlind}
-                handId={activeHand._id}
-                gameId={gameId}
-                player={address}
-              />
-            )}
-          </TabsContent>
-          <TabsContent className="bg-[#f1f5f9] p-1" value="chat">
-            {threads.reverse().map((thread) => (
-              <Thread key={thread.id} thread={thread} />
-            ))}
+              {!isBigBlind &&
+                !hasSmallBlind &&
+                challengers?.includes(address) && (
+                  <Card>
+                    <CardHeader>
+                      <CardDescription>
+                        Waiting on the big blind to set the buy-in ...
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                )}
+
+              {isBigBlind && hasSmallBlind && !activeHand && (
+                <Card>
+                  <CardHeader>
+                    <CardDescription>
+                      Start by creating a buy-in for the small blind ...
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <CreateHand gameId={gameId} smallBlind={game?.smallBlind} />
+                  </CardContent>
+                </Card>
+              )}
+
+              {!isBigBlind && hasSmallBlind && !activeHand && (
+                <Card>
+                  <CardHeader>
+                    <CardDescription>
+                      Waiting on the big blind to set the buy-in ...
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              )}
+
+              {hasSmallBlind && activeHand && (
+                <Hand
+                  isBigBlind={isBigBlind}
+                  handId={activeHand._id}
+                  gameId={gameId}
+                  player={address}
+                />
+              )}
+            </div>
+          </div>
+
+          <div className="w-full max-w-md flex flex-col h-screen justify-between bg-[#f1f5f9] p-1 text-xs relative">
+            <div className="flex flex-col justify-normal overflow-scroll">
+              {threads.reverse().map((thread) => (
+                <Thread key={thread.id} thread={thread} />
+              ))}
+            </div>
             <Composer />
-          </TabsContent>
-        </Tabs>
-      </GameLayout>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

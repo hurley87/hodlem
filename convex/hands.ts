@@ -262,8 +262,6 @@ export const check = mutation({
     const hand = await ctx.db.get(id);
     const stage = hand.stage;
 
-    console.log('hand', hand);
-
     if (!hand) return;
 
     await ctx.db.patch(id, {

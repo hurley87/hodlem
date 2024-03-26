@@ -8,17 +8,17 @@ export const get = query({
   },
 });
 
-const getFirstProfile = async (ctx: any, address: string) => {
+const getProfile = async (ctx: any, address: string) => {
   return ctx.db
     .query('profiles')
     .filter((q: any) => q.eq(q.field('address'), address))
     .first();
 };
 
-export const getByAddress = query({
+export const getProfileUsingAddress = query({
   args: { address: v.optional(v.string()) },
   handler: async (ctx, { address }) => {
-    return await getFirstProfile(ctx, address as string);
+    return await getProfile(ctx, address as string);
   },
 });
 
@@ -36,7 +36,7 @@ export const create = mutation({
     ctx,
     { bio, displayName, fid, ownerAddress, pfp, username, address }
   ) => {
-    const existingProfile = await getFirstProfile(ctx, address);
+    const existingProfile = await getProfile(ctx, address);
     if (!existingProfile) {
       await ctx.db.insert('profiles', {
         bio,
@@ -48,17 +48,5 @@ export const create = mutation({
         address,
       });
     }
-  },
-});
-
-export const update = mutation({
-  args: {
-    id: v.id('profiles'),
-    degen: v.string(),
-    allowance: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const { id, degen, allowance } = args;
-    await ctx.db.patch(id, { degen, allowance });
   },
 });

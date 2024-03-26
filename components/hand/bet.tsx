@@ -1,11 +1,7 @@
 'use client';
-import toast from 'react-hot-toast';
-import { usePrivy, useWallets } from '@privy-io/react-auth';
+import { useToast } from '@/components/ui/use-toast';
+import { usePrivy } from '@privy-io/react-auth';
 import { useState } from 'react';
-import useWalletClient from '@/hooks/useWalletClient';
-import { chain } from '@/constants/chain';
-import { createPublicClient, http, parseEther } from 'viem';
-import Hodlem from '@/hooks/abis/Hodlem.json';
 import { api } from '@/convex/_generated/api';
 import { useMutation } from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
@@ -19,6 +15,9 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '../ui/button';
 import CreateHandForm from './create-form';
+import useChain from '@/hooks/useChain';
+import { ToastAction } from '../ui/toast';
+import Link from 'next/link';
 
 function BetHand({
   id,
@@ -33,66 +32,76 @@ function BetHand({
 }) {
   const { user } = usePrivy();
   const [creatingBet, setCreatingBet] = useState(false);
-  const { wallets } = useWallets();
-  const publicClient = createPublicClient({
-    chain,
-    transport: http(),
-  });
   const address = user?.wallet?.address as `0x${string}`;
-  const wallet = wallets.filter((wallet) => wallet?.address === address)[0];
-  const walletClient = useWalletClient({ chain, wallet });
-  const hodlemContract = process.env
-    .NEXT_PUBLIC_HODLEM_CONTRACT as `0x${string}`;
-  const betHand = useMutation(api.hands.bet);
+  const saveBet = useMutation(api.hands.bet);
+  const onchain = useChain({ address });
+  const { toast } = useToast();
 
   const handleBetHand = async (betAmount: number) => {
     setCreatingBet(true);
-    const client = await walletClient;
 
-    if (isNaN(Number(betAmount)) || Number(betAmount) < 100) {
-      toast.error("Your bet can't be less than 100");
+    if (isNaN(betAmount) || betAmount < 100) {
+      toast({
+        title: 'Error',
+        description: "Your bet can't be less than 100",
+        variant: 'destructive',
+      });
       setCreatingBet(false);
       return;
     }
 
     if (betAmount > (activeStack || 0)) {
-      toast.error('Your stack isnt big enough for this bet');
+      toast({
+        title: 'Error',
+        description: 'Your stack isnt big enough for this bet',
+        variant: 'destructive',
+      });
       setCreatingBet(false);
       return;
     }
 
     if (betAmount > (opposingStack || 0)) {
-      toast.error(`The max bet is ${opposingStack} $DEGEN`);
+      toast({
+        title: 'Error',
+        description: `The max bet is ${opposingStack} $DEGEN`,
+        variant: 'destructive',
+      });
       setCreatingBet(false);
       return;
     }
 
     try {
-      const { request } = await publicClient.simulateContract({
-        address: hodlemContract,
-        abi: Hodlem.abi,
-        functionName: 'makeBet',
-        args: [onchainId, parseEther(betAmount.toString())],
-        account: address,
+      const recepit = await onchain?.bet({
+        onchainId,
+        betAmount: betAmount.toString(),
       });
 
-      const hash = (await client?.writeContract(
-        request as any
-      )) as `0x${string}`;
-
-      await publicClient.waitForTransactionReceipt({
-        hash,
-      });
-
-      await betHand({
+      await saveBet({
         id,
         betAmount: Number(betAmount),
         player: address,
       });
 
+      toast({
+        title: 'Success',
+        description: 'Bet placed onchain',
+        action: (
+          <Link
+            target="_blank"
+            href={`https://basescan.org/tx/${recepit?.transactionHash}`}
+          >
+            <ToastAction altText="Try again">View transaction</ToastAction>
+          </Link>
+        ),
+      });
+
       setCreatingBet(false);
     } catch {
-      toast.error('Error creating bet');
+      toast({
+        title: 'Error',
+        description: 'Error creating bet',
+        variant: 'destructive',
+      });
       setCreatingBet(false);
       return;
     }
@@ -106,7 +115,7 @@ function BetHand({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Place a bet</DialogTitle>
-          <DialogDescription>Enter a bet amount.</DialogDescription>
+          <DialogDescription>Use slider to enter your bet</DialogDescription>
         </DialogHeader>
         <CreateHandForm
           handleCreateHand={handleBetHand}

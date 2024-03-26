@@ -1,10 +1,10 @@
 'use client';
-import toast from 'react-hot-toast';
 import { useState } from 'react';
 import { api } from '@/convex/_generated/api';
 import { useMutation } from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
 import { Button } from '../ui/button';
+import { useToast } from '../ui/use-toast';
 
 function FoldHand({
   id,
@@ -17,6 +17,7 @@ function FoldHand({
 }) {
   const [foldingHand, setFoldingHard] = useState(false);
   const foldHand = useMutation(api.hands.fold);
+  const { toast } = useToast();
 
   const handleFoldHand = async () => {
     setFoldingHard(true);
@@ -37,11 +38,18 @@ function FoldHand({
         hash,
       });
 
-      toast.success('Hand folded');
+      toast({
+        title: 'Hold folded',
+        description: 'Start a new one',
+      });
 
       setFoldingHard(false);
     } catch (e) {
-      toast.error('Error creating hand');
+      toast({
+        title: 'Error',
+        description: 'Error folding hand',
+        variant: 'destructive',
+      });
       setFoldingHard(false);
       return;
     }

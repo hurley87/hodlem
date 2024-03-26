@@ -3,7 +3,8 @@ import { Inter as FontSans } from 'next/font/google';
 import './globals.css';
 import ConvexClientProvider from './ConvexClientProvider';
 import PrivyWrapper from './PrivyWrapper';
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from '@/components/ui/toaster';
+
 import '@liveblocks/react-comments/styles.css';
 
 const fontSans = FontSans({

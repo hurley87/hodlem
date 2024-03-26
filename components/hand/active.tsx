@@ -24,6 +24,7 @@ import ClaimHand from './claim';
 import NewHand from './new';
 import Link from 'next/link';
 import { Button } from '../ui/button';
+import useProfile from '@/hooks/useProfile';
 
 type Props = {
   handId: Id<'hands'>;
@@ -33,14 +34,11 @@ type Props = {
 
 function ActivePlayer({ handId, activeStack, opposingStack }: Props) {
   const { user } = usePrivy();
-  const address = user?.wallet?.address;
+  const address = user?.wallet?.address as `0x${string}`;
   const hand = useQuery(api.hands.getHand, {
     handId,
   }) as any;
-
-  const profile = useQuery(api.profiles.getByAddress, {
-    address,
-  }) as any;
+  const profile = useProfile({ address });
   const isBigBlind = address === hand?.bigBlind;
   const isActivePlayer = hand?.activePlayer === address;
   const cards = isBigBlind ? hand?.bigBlindCards : hand?.smallBlindCards;

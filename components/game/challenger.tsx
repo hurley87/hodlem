@@ -1,11 +1,10 @@
 'use client';
-import { api } from '@/convex/_generated/api';
-import { useQuery } from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { toHumanReadable } from '@/lib/utils';
 import CreateHand from '../hand/create';
 import Link from 'next/link';
+import useProfile from '@/hooks/useProfile';
 
 export default function Challenger({
   id,
@@ -14,9 +13,7 @@ export default function Challenger({
   id: Id<'games'>;
   address: `0x${string}`;
 }) {
-  const profile = useQuery(api.profiles.getByAddress, {
-    address,
-  });
+  const profile = useProfile({ address });
 
   return (
     <div className="flex items-center justify-between space-x-4">
@@ -38,7 +35,7 @@ export default function Challenger({
               </div>
             </Link>
             <div className="text-xs leading-none text-muted-foreground pt-1">
-              {toHumanReadable(parseInt(profile.degen))} $DEGEN
+              {toHumanReadable(profile.balance)} $DEGEN
             </div>
           </div>
         )}

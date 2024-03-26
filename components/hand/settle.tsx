@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { Id } from '@/convex/_generated/dataModel';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
-import toast from 'react-hot-toast';
 import { Button } from '../ui/button';
+import { useToast } from '../ui/use-toast';
 
 type Props = {
   id: Id<'hands'>;
@@ -15,6 +15,7 @@ type Props = {
 function SettleHand({ id, onchainId }: Props) {
   const [isSettling, setIsSettling] = useState(false);
   const showOutput = useMutation(api.hands.showOutput);
+  const { toast } = useToast();
 
   async function handleDealHand() {
     setIsSettling(true);
@@ -35,11 +36,18 @@ function SettleHand({ id, onchainId }: Props) {
         hash,
       });
 
-      toast.success('Hand settled');
+      toast({
+        title: 'Success',
+        description: 'Hand settled',
+      });
 
       setIsSettling(false);
     } catch {
-      toast.error('Error creating hand');
+      toast({
+        title: 'Error',
+        description: 'Error settling hand',
+        variant: 'destructive',
+      });
       setIsSettling(false);
       return;
     }

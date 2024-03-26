@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
+import { formatEther, parseEther } from 'viem';
 
 function CreateHandForm({
   handleCreateHand,
@@ -19,7 +20,6 @@ function CreateHandForm({
   return (
     <>
       <div className="flex gap-2 py-4">
-        <Label className="text-xl font-bold text-center">{buy} $DEGEN</Label>
         <Slider
           value={[buy]}
           onValueChange={(e) => setBuy(e[0])}
@@ -34,7 +34,7 @@ function CreateHandForm({
           disabled={creatingHand}
           onClick={(e) => handleCreateHand(buy)}
         >
-          {creatingHand ? 'Betting...' : `Bet`}
+          {creatingHand ? 'Betting...' : `Bet ${buy} $DEGEN`}
         </Button>
       </DialogFooter>
     </>
