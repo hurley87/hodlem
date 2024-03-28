@@ -131,7 +131,7 @@ function ActivePlayer({ handId, activeStack, opposingStack }: Props) {
             winner={opposingPlayer}
           />
         )}
-        {true && <RevealHand id={hand._id} />}
+        {canReveal && <RevealHand id={hand._id} />}
         {canSettle && (
           <SettleHand
             id={hand._id}
