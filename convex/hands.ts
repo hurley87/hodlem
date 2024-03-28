@@ -1072,7 +1072,7 @@ const checkTwoPair = (cards: string[]) => {
     return acc;
   }, {} as Record<number, number>);
 
-  return Object.values(counts).filter((count) => count === 2).length === 2;
+  return Object.values(counts).filter((count) => count === 2).length >= 2;
 };
 
 const checkOnePair = (cards: string[]) => {
