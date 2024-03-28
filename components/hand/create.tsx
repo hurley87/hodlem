@@ -219,6 +219,7 @@ function CreateHand({
             handleCreateHand={handleCreateHand}
             creatingHand={creatingHand}
             opposingStack={900}
+            activeStack={900}
           />
         )}
       </DialogContent>
