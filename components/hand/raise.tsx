@@ -20,6 +20,7 @@ import useChain from '@/hooks/useChain';
 import { useToast } from '../ui/use-toast';
 import Link from 'next/link';
 import { ToastAction } from '../ui/toast';
+import { useBroadcastEvent } from '@/liveblocks.config';
 
 function RaiseHand({
   id,
@@ -39,6 +40,7 @@ function RaiseHand({
   const degen = useRead();
   const onchain = useChain({ address });
   const { toast } = useToast();
+  const broadcast = useBroadcastEvent();
 
   const handleRaiseHand = async (raiseAmount: number) => {
     setCreatingBet(true);
@@ -99,6 +101,8 @@ function RaiseHand({
         betAmount: Number(raiseAmount),
         player: address,
       });
+
+      broadcast({ type: 'TOAST', message: 'Bet raised' });
 
       setCreatingBet(false);
     } catch (e) {

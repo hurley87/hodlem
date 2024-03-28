@@ -18,6 +18,7 @@ import CreateHandForm from './create-form';
 import useChain from '@/hooks/useChain';
 import { ToastAction } from '../ui/toast';
 import Link from 'next/link';
+import { useBroadcastEvent } from '@/liveblocks.config';
 
 function BetHand({
   id,
@@ -35,6 +36,8 @@ function BetHand({
   const address = user?.wallet?.address as `0x${string}`;
   const saveBet = useMutation(api.hands.bet);
   const onchain = useChain({ address });
+
+  const broadcast = useBroadcastEvent();
   const { toast } = useToast();
 
   const handleBetHand = async (betAmount: number) => {
@@ -95,6 +98,8 @@ function BetHand({
         ),
       });
 
+      broadcast({ type: 'TOAST', message: 'Bet made' });
+
       setCreatingBet(false);
     } catch {
       toast({
@@ -115,7 +120,7 @@ function BetHand({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Place a bet</DialogTitle>
-          <DialogDescription>Use slider to enter your bet</DialogDescription>
+          <DialogDescription>Use slider to make your bet</DialogDescription>
         </DialogHeader>
         <CreateHandForm
           handleCreateHand={handleBetHand}

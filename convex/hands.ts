@@ -1041,6 +1041,11 @@ const getPairValue = (cards: string[]) => {
 
   const pairs = Object.entries(counts).filter(([_, count]) => count === 2);
 
+  if (pairs.length === 2) {
+    const pairValues = pairs.map(([value]) => parseInt(value));
+    return Math.max(...pairValues);
+  }
+
   return parseInt(pairs[0][0]);
 };
 

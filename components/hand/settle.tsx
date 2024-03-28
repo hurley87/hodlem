@@ -5,6 +5,7 @@ import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Button } from '../ui/button';
 import { useToast } from '../ui/use-toast';
+import { useBroadcastEvent } from '@/liveblocks.config';
 
 type Props = {
   id: Id<'hands'>;
@@ -16,6 +17,7 @@ function SettleHand({ id, onchainId }: Props) {
   const [isSettling, setIsSettling] = useState(false);
   const showOutput = useMutation(api.hands.showOutput);
   const { toast } = useToast();
+  const broadcast = useBroadcastEvent();
 
   async function handleDealHand() {
     setIsSettling(true);
@@ -40,6 +42,8 @@ function SettleHand({ id, onchainId }: Props) {
         title: 'Success',
         description: 'Hand settled',
       });
+
+      broadcast({ type: 'TOAST', message: 'Hand settled' });
 
       setIsSettling(false);
     } catch {

@@ -12,6 +12,7 @@ import useChain from '@/hooks/useChain';
 import { useToast } from '../ui/use-toast';
 import Link from 'next/link';
 import { ToastAction } from '../ui/toast';
+import { useBroadcastEvent } from '@/liveblocks.config';
 
 function CallHand({
   id,
@@ -35,6 +36,7 @@ function CallHand({
   const callHand = useMutation(api.hands.call);
   const onchain = useChain({ address });
   const { toast } = useToast();
+  const broadcast = useBroadcastEvent();
 
   const handleCallHand = async () => {
     setCreatingBet(true);
@@ -80,6 +82,8 @@ function CallHand({
           </Link>
         ),
       });
+
+      broadcast({ type: 'TOAST', message: 'Bet called' });
 
       setCreatingBet(false);
     } catch (e) {

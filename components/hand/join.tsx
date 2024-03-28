@@ -10,6 +10,7 @@ import useChain from '@/hooks/useChain';
 import { useToast } from '../ui/use-toast';
 import Link from 'next/link';
 import { ToastAction } from '../ui/toast';
+import { useBroadcastEvent } from '@/liveblocks.config';
 
 function JoinHand({
   id,
@@ -26,6 +27,7 @@ function JoinHand({
   const join = useMutation(api.hands.join);
   const onchain = useChain({ address });
   const { toast } = useToast();
+  const broadcast = useBroadcastEvent();
 
   async function handleJoin() {
     setIsJoining(true);
@@ -52,6 +54,8 @@ function JoinHand({
         id,
         smallBlindBetTotal: bigBlindBetTotal,
       });
+
+      broadcast({ type: 'TOAST', message: 'New player joined' });
 
       setIsJoining(false);
     } catch (e) {

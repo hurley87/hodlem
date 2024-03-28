@@ -5,6 +5,7 @@ import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardHeader } from '../ui/card';
+import { useBroadcastEvent } from '@/liveblocks.config';
 
 type Props = {
   id: Id<'hands'>;
@@ -14,6 +15,7 @@ type Props = {
 function DealHand({ id, gameId }: Props) {
   const [isDealing, setIsDealing] = useState(false);
   const dealHand = useMutation(api.hands.deal);
+  const broadcast = useBroadcastEvent();
 
   async function handleDealHand() {
     setIsDealing(true);
@@ -22,6 +24,8 @@ function DealHand({ id, gameId }: Props) {
       id,
       gameId,
     });
+
+    broadcast({ type: 'TOAST', message: 'Cards dealt' });
   }
 
   return (

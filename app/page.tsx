@@ -8,6 +8,7 @@ import { GameCreate } from '@/components/game-create';
 import { GameLayout } from '@/components/game-layout';
 import Loading from '@/components/loading';
 import NoGames from '@/components/no-games';
+import OnboardingWrapper from './OnboardingWrapper';
 
 export default function Home() {
   const { user, ready } = usePrivy();
@@ -22,7 +23,7 @@ export default function Home() {
   }
 
   return (
-    <>
+    <OnboardingWrapper>
       {noGames ? (
         <NoGames />
       ) : (
@@ -57,6 +58,6 @@ export default function Home() {
           </div>
         </GameLayout>
       )}
-    </>
+    </OnboardingWrapper>
   );
 }

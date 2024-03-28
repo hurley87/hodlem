@@ -5,6 +5,7 @@ import { useMutation } from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
 import { Button } from '../ui/button';
 import { useToast } from '../ui/use-toast';
+import { useBroadcastEvent } from '@/liveblocks.config';
 
 function FoldHand({
   id,
@@ -21,6 +22,7 @@ function FoldHand({
 
   const handleFoldHand = async () => {
     setFoldingHard(true);
+    const broadcast = useBroadcastEvent();
 
     try {
       const resp = await fetch('/api/endHand', {
@@ -42,6 +44,8 @@ function FoldHand({
         title: 'Hold folded',
         description: 'Start a new one',
       });
+
+      broadcast({ type: 'TOAST', message: 'Hand folded' });
 
       setFoldingHard(false);
     } catch (e) {

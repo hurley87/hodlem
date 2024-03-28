@@ -61,8 +61,8 @@ type UserMeta = {
 // Optionally, the type of custom events broadcast and listened to in this
 // room. Use a union for multiple events. Must be JSON-serializable.
 type RoomEvent = {
-  // type: 'TOAST';
-  // message: string;
+  type: 'TOAST';
+  message: string;
 };
 
 // Optionally, when using Comments, ThreadMetadata represents metadata on
