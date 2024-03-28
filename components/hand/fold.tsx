@@ -19,10 +19,10 @@ function FoldHand({
   const [foldingHand, setFoldingHard] = useState(false);
   const foldHand = useMutation(api.hands.fold);
   const { toast } = useToast();
+  const broadcast = useBroadcastEvent();
 
   const handleFoldHand = async () => {
     setFoldingHard(true);
-    const broadcast = useBroadcastEvent();
 
     try {
       const resp = await fetch('/api/endHand', {

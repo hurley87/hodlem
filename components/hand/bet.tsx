@@ -126,6 +126,7 @@ function BetHand({
           handleCreateHand={handleBetHand}
           creatingHand={creatingBet}
           opposingStack={opposingStack as number}
+          activeStack={activeStack as number}
         />
       </DialogContent>
     </Dialog>

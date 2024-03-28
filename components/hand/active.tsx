@@ -121,6 +121,7 @@ function ActivePlayer({ handId, activeStack, opposingStack }: Props) {
             onchainId={hand.onchainId}
             opposingStack={opposingStack as number}
             betAmount={hand?.betAmount?.toString()}
+            activeStack={activeStack as number}
           />
         )}
         {canFold && (

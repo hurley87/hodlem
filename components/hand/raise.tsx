@@ -27,11 +27,13 @@ function RaiseHand({
   onchainId,
   betAmount,
   opposingStack,
+  activeStack,
 }: {
   id: Id<'hands'>;
   onchainId: string;
   betAmount: string;
   opposingStack: number;
+  activeStack: number;
 }) {
   const { user } = usePrivy();
   const [creatingBet, setCreatingBet] = useState(false);
@@ -132,6 +134,7 @@ function RaiseHand({
           handleCreateHand={handleRaiseHand}
           creatingHand={creatingBet}
           opposingStack={opposingStack}
+          activeStack={activeStack as number}
         />
       </DialogContent>
     </Dialog>

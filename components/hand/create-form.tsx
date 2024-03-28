@@ -10,10 +10,12 @@ function CreateHandForm({
   handleCreateHand,
   creatingHand,
   opposingStack,
+  activeStack,
 }: {
   handleCreateHand: (buy: number) => void;
   creatingHand: boolean;
   opposingStack: number;
+  activeStack: number;
 }) {
   const [buy, setBuy] = useState(100);
 
@@ -23,7 +25,7 @@ function CreateHandForm({
         <Slider
           value={[buy]}
           onValueChange={(e) => setBuy(e[0])}
-          max={opposingStack}
+          max={opposingStack > activeStack ? activeStack : opposingStack}
           step={100}
           min={100}
         />
