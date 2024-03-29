@@ -78,3 +78,10 @@ export const swap = mutation({
     await ctx.db.patch(id, { bigBlind, smallBlind });
   },
 });
+
+export const deleteGame = mutation({
+  args: { id: v.id('games') },
+  handler: async (ctx, { id }) => {
+    await ctx.db.delete(id);
+  },
+});

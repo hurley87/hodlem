@@ -6,6 +6,10 @@ import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
 import Challenger from './challenger';
 import { useToast } from '../ui/use-toast';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Share({
   id,
@@ -17,6 +21,25 @@ export default function Share({
 }) {
   const url = `${window.origin}/game/${id}`;
   const { toast } = useToast();
+  const checkHand = useMutation(api.games.deleteGame);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const router = useRouter();
+
+  async function handleDelete() {
+    setIsDeleting(true);
+
+    await checkHand({
+      id,
+    });
+
+    toast({
+      title: 'Game deleted',
+    });
+
+    router.push('/');
+
+    setIsDeleting(false);
+  }
 
   return (
     <Card>
@@ -57,6 +80,10 @@ export default function Share({
             </div>
           </div>
         )}
+        <Separator className="my-4" />
+        <Button onClick={handleDelete} variant="destructive" className="w-full">
+          {isDeleting ? 'Deleting...' : 'Delete game'}
+        </Button>
       </CardContent>
     </Card>
   );
