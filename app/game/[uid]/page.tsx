@@ -52,7 +52,7 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!user) {
+    if (ready && !user) {
       toast({
         title: 'Error',
         description: 'Please connect your wallet',
@@ -60,7 +60,7 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
       });
       router.push('/');
     }
-  }, [user]);
+  }, [ready, user]);
 
   useEventListener(({ event }) => {
     if (event.type === 'TOAST') {
