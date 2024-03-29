@@ -31,10 +31,6 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
   const [balance, setBalance] = useState<any>(0);
   const [allowance, setAllowance] = useState<any>(0);
 
-  if (!ready) {
-    return <Loading />;
-  }
-
   const noBalance = balance === 0;
   const hasBalanceButNoAllowance = balance !== 0 && allowance === 0;
 
@@ -98,6 +94,10 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
     }
     if (user && hasFarcasterLinked) updateProfileWithFarcaster(user);
   }, [user, profile]);
+
+  if (!ready) {
+    return <Loading />;
+  }
 
   return (
     <div className="md:pt-0">
