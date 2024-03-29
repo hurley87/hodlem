@@ -24,29 +24,44 @@ export const getProfileUsingAddress = query({
 
 export const create = mutation({
   args: {
-    bio: v.string(),
-    displayName: v.string(),
-    fid: v.number(),
-    ownerAddress: v.string(),
-    pfp: v.string(),
-    username: v.optional(v.string()),
     address: v.string(),
   },
-  handler: async (
-    ctx,
-    { bio, displayName, fid, ownerAddress, pfp, username, address }
-  ) => {
+  handler: async (ctx, { address }) => {
     const existingProfile = await getProfile(ctx, address);
     if (!existingProfile) {
       await ctx.db.insert('profiles', {
-        bio,
-        displayName,
-        fid,
-        ownerAddress,
-        pfp,
-        username,
         address,
       });
     }
+  },
+});
+
+export const update = mutation({
+  args: {
+    address: v.string(),
+    bio: v.optional(v.string()),
+    displayName: v.optional(v.string()),
+    fid: v.optional(v.number()),
+    ownerAddress: v.optional(v.string()),
+    pfp: v.optional(v.string()),
+    username: v.optional(v.string()),
+  },
+  handler: async (
+    ctx,
+    { address, bio, displayName, fid, ownerAddress, pfp, username }
+  ) => {
+    const existingProfile = await getProfile(ctx, address);
+    console.log('existingProfile', existingProfile);
+    if (!existingProfile) {
+      return;
+    }
+    await ctx.db.patch(existingProfile._id, {
+      bio,
+      displayName,
+      fid,
+      ownerAddress,
+      pfp,
+      username,
+    });
   },
 });

@@ -27,6 +27,8 @@ import Loading from '@/components/loading';
 import Link from 'next/link';
 import { UserNav } from '@/components/user-nav';
 import { useToast } from '@/components/ui/use-toast';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Game({ params }: { params: { uid: Id<'games'> } }) {
   const gameId = params.uid;
@@ -47,6 +49,18 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
   const others = useOthers();
   const [_, updateMyPresence] = useMyPresence();
   const { toast } = useToast();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user) {
+      toast({
+        title: 'Error',
+        description: 'Please connect your wallet',
+        variant: 'destructive',
+      });
+      router.push('/');
+    }
+  }, [user]);
 
   useEventListener(({ event }) => {
     if (event.type === 'TOAST') {
