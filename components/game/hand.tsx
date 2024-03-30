@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { createPublicClient, formatEther, http } from 'viem';
 import { chain } from '@/constants/chain';
 import Hodlem from '@/hooks/abis/Hodlem.json';
-import Degen from '@/hooks/abis/Degen.json';
 import JoinHand from '../hand/join';
 import CancelHand from '../hand/cancel';
 import DealHand from '../hand/deal';

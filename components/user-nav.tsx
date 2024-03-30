@@ -24,12 +24,12 @@ export function UserNav() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="relative h-8 w-8 rounded-full">
+        <button className="relative h-8 w-8">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={profile?.pfp} alt="@shadcn" />
+            <AvatarImage className="h-8 w-8" src={profile?.pfp} alt="@shadcn" />
             <AvatarFallback>{profile?.username}</AvatarFallback>
           </Avatar>
-        </Button>
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">

@@ -2,13 +2,6 @@
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { toHumanReadable } from '@/lib/utils';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-} from '../ui/card';
 import { Id } from '@/convex/_generated/dataModel';
 import { usePrivy } from '@privy-io/react-auth';
 import { Badge } from '../ui/badge';
@@ -67,7 +60,7 @@ function ActivePlayer({ handId, activeStack, opposingStack }: Props) {
         <Cards cards={cards} />
       </div>
       <div
-        className={`w-40 mx-auto rounded-sm relative bottom-16 bg-white p-3 text-center shadow-lg ${
+        className={`w-40 mx-auto rounded-sm relative bottom-16 bg-white p-3 text-center shadow-lg transition-all duration-300 ease-in ${
           isActivePlayer && 'shadow-green-200'
         }`}
       >
@@ -78,8 +71,8 @@ function ActivePlayer({ handId, activeStack, opposingStack }: Props) {
             <Badge className="relative bottom-3 left-3">S</Badge>
           )}
         </div>
-        <div className="text-xs">{profile.username}</div>
-        <div className="text-sm font-bold">
+        <div className="text-xs text-muted-foreground">{profile.username}</div>
+        <div className="text-sm font-bold text-muted-foreground">
           {!activeStack ? 0 : toHumanReadable(activeStack)}
         </div>
       </div>

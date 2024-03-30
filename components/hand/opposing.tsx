@@ -2,7 +2,6 @@
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { toHumanReadable } from '@/lib/utils';
-import { Card, CardContent, CardDescription, CardHeader } from '../ui/card';
 import { Id } from '@/convex/_generated/dataModel';
 import { usePrivy } from '@privy-io/react-auth';
 import { Badge } from '../ui/badge';
@@ -51,7 +50,7 @@ function OpposingPlayer({ handId, stack }: Props) {
         )}
       </div>
       <div
-        className={` rounded-sm absolute bottom-0 left-0 right-0 bg-white p-3 text-center shadow-lg ${
+        className={` rounded-sm absolute bottom-0 left-0 right-0 bg-white p-3 text-center shadow-lg transition-all duration-300 ease-in ${
           isActivePlayer && 'shadow-green-200'
         }`}
       >
@@ -62,8 +61,8 @@ function OpposingPlayer({ handId, stack }: Props) {
             <Badge className="relative bottom-3 left-3">S</Badge>
           )}
         </div>
-        <div className="text-xs">{profile.username}</div>
-        <div className="text-sm font-bold">
+        <div className="text-xs text-muted-foreground">{profile.username}</div>
+        <div className="text-sm font-bold text-muted-foreground">
           {!stack ? 0 : toHumanReadable(stack)}
         </div>
       </div>

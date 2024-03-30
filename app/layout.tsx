@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`min-h-screen bg-background font-sans antialiased  ${fontSans.variable}`}
+        className={`min-h-screen bg-background font-sans antialiased  bg-gradient-to-r from-slate-100 to-slate-50  ${fontSans.variable}`}
       >
         <Toaster />
         <ConvexClientProvider>

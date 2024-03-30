@@ -2,9 +2,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { DialogFooter } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
-import { formatEther, parseEther } from 'viem';
 
 function CreateHandForm({
   handleCreateHand,

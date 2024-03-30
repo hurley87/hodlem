@@ -95,26 +95,15 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
     return <Loading />;
   }
 
-  return (
-    <div className="md:pt-0">
-      {/* user must connect their account */}
-      {!user && <ConnectWallet />}
+  if (!user) return <ConnectWallet />;
 
-      {/* user must link their Farcaster account */}
-      {user && !hasFarcasterLinked && <LinkFarcaster />}
+  if (!hasFarcasterLinked) return <LinkFarcaster />;
 
-      {/* user must have DEGEN */}
-      {user && hasFarcasterLinked && noBalance && <FundAccount />}
+  if (noBalance) return <FundAccount />;
 
-      {/* user must allow Hodlem contract to transfer tokens */}
-      {user && hasFarcasterLinked && hasBalanceButNoAllowance && (
-        <Approve balance={balance.toString()} />
-      )}
+  if (hasBalanceButNoAllowance) return <Approve balance={balance.toString()} />;
 
-      {/* let user see page if they fit the requirements above */}
-      {user && hasFarcasterLinked && allowance !== 0 && children}
-    </div>
-  );
+  return <div>{children}</div>;
 }
 
 export default OnboardingWrapper;

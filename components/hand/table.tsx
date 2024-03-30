@@ -23,7 +23,7 @@ function Table({ handId, pot }: Props) {
   const riverCard = hand.riverCard;
 
   return (
-    <div className="shadow-2xl rounded-xl p-3 lg:p-6">
+    <div className="shadow-2xl rounded-3xl p-3 lg:p-10 bg-gradient-to-r from-slate-200 to-slate-100">
       <div className="flex justify-center">
         {hand.stage === 'over' ? (
           <div className="font-black ">{hand.resultMessage}!</div>
@@ -31,7 +31,7 @@ function Table({ handId, pot }: Props) {
           <Badge>Pot: {toHumanReadable(pot || 0)} $DEGEN</Badge>
         )}
       </div>
-      <div className="flex justify-center pt-4 gap-1">
+      <div className="flex justify-center pt-6 gap-1">
         {!flopCards && <Cards cards={['back', 'back', 'back']} />}
         {flopCards && (
           <Cards cards={flopCards.filter((card: string) => card !== 'back')} />
