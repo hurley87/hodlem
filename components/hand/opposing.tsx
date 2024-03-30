@@ -63,7 +63,7 @@ function OpposingPlayer({ handId, stack }: Props) {
         </div>
         <div className="text-xs text-muted-foreground">{profile.username}</div>
         <div className="text-sm font-bold text-muted-foreground">
-          {!stack ? 0 : toHumanReadable(stack)}
+          {!stack ? 0 : toHumanReadable(parseInt(stack.toFixed(0)))}
         </div>
       </div>
     </div>

@@ -73,7 +73,7 @@ function ActivePlayer({ handId, activeStack, opposingStack }: Props) {
         </div>
         <div className="text-xs text-muted-foreground">{profile.username}</div>
         <div className="text-sm font-bold text-muted-foreground">
-          {!activeStack ? 0 : toHumanReadable(activeStack)}
+          {!activeStack ? 0 : toHumanReadable(parseInt(activeStack.toFixed(0)))}
         </div>
       </div>
       <div className="text-center relative bottom-10 flex gap-2 justify-center">
