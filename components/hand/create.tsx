@@ -220,6 +220,7 @@ function CreateHand({
             creatingHand={creatingHand}
             opposingStack={900}
             activeStack={900}
+            raiseAmount={100}
           />
         )}
       </DialogContent>

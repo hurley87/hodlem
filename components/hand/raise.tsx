@@ -126,15 +126,14 @@ function RaiseHand({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Place a bet</DialogTitle>
-          <DialogDescription>
-            Raise your opponent more than {betAmount}
-          </DialogDescription>
+          <DialogDescription>Raise at least {betAmount}</DialogDescription>
         </DialogHeader>
         <CreateHandForm
           handleCreateHand={handleRaiseHand}
           creatingHand={creatingBet}
           opposingStack={opposingStack}
           activeStack={activeStack as number}
+          raiseAmount={Number(betAmount)}
         />
       </DialogContent>
     </Dialog>

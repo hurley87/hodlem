@@ -9,13 +9,15 @@ function CreateHandForm({
   creatingHand,
   opposingStack,
   activeStack,
+  raiseAmount,
 }: {
   handleCreateHand: (buy: number) => void;
   creatingHand: boolean;
   opposingStack: number;
   activeStack: number;
+  raiseAmount: number;
 }) {
-  const [buy, setBuy] = useState(100);
+  const [buy, setBuy] = useState(raiseAmount);
 
   return (
     <>
@@ -25,7 +27,7 @@ function CreateHandForm({
           onValueChange={(e) => setBuy(e[0])}
           max={opposingStack > activeStack ? activeStack : opposingStack}
           step={100}
-          min={100}
+          min={raiseAmount}
         />
       </div>
       <DialogFooter>

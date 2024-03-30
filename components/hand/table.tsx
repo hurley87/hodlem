@@ -23,7 +23,7 @@ function Table({ handId, pot }: Props) {
   const riverCard = hand.riverCard;
 
   return (
-    <div className="shadow-2xl rounded-3xl p-3 lg:p-10 bg-gradient-to-r from-slate-200 to-slate-100">
+    <div className="shadow-2xl rounded-3xl p-8 lg:p-10 bg-gradient-to-r from-slate-200 to-slate-100">
       <div className="flex justify-center">
         {hand.stage === 'over' ? (
           <div className="font-black ">{hand.resultMessage}!</div>
