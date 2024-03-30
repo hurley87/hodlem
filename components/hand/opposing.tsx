@@ -8,6 +8,7 @@ import { usePrivy } from '@privy-io/react-auth';
 import { Badge } from '../ui/badge';
 import Cards from './cards';
 import useProfile from '@/hooks/useProfile';
+import Image from 'next/image';
 
 type Props = {
   handId: Id<'hands'>;
@@ -30,30 +31,43 @@ function OpposingPlayer({ handId, stack }: Props) {
   if (!profile) return null;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardDescription>
-          <div className="flex justify-between">
-            <div>
-              {profile.displayName} | {!stack ? 0 : toHumanReadable(stack)}{' '}
-              $DEGEN
-            </div>
-            {isActivePlayer ? (
-              <Badge className="bg-green-500">Their turn</Badge>
-            ) : isBigBlind ? (
-              <Badge variant="outline">Big blind</Badge>
-            ) : (
-              <Badge variant="outline">Small blind</Badge>
-            )}
-          </div>
-        </CardDescription>
-      </CardHeader>
-      {hand?.stage === 'over' && hand?.result !== 'fold' && (
-        <CardContent>
+    <div className="flex flex-col gap-2 px-2 relative w-40 mx-auto">
+      <div className="flex justify-center">
+        {hand?.stage === 'over' && hand?.result !== 'fold' ? (
           <Cards cards={cards} />
-        </CardContent>
-      )}
-    </Card>
+        ) : (
+          <div className="flex gap-1">
+            {[1, 2].map((card: number) => (
+              <div key={card} className="bg-white rounded-md shadow-xl">
+                <Image
+                  alt={`card-${card}`}
+                  src={`/cards/back.svg`}
+                  width={75}
+                  height={90}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <div
+        className={` rounded-sm absolute bottom-0 left-0 right-0 bg-white p-3 text-center shadow-lg ${
+          isActivePlayer && 'shadow-green-200'
+        }`}
+      >
+        <div className="absolute top-0 right-0">
+          {isBigBlind ? (
+            <Badge className="relative bottom-3 left-3">B</Badge>
+          ) : (
+            <Badge className="relative bottom-3 left-3">S</Badge>
+          )}
+        </div>
+        <div className="text-xs">{profile.username}</div>
+        <div className="text-sm font-bold">
+          {!stack ? 0 : toHumanReadable(stack)}
+        </div>
+      </div>
+    </div>
   );
 }
 

@@ -91,7 +91,7 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
           />
         ))}
       <GameLayout>
-        <>
+        <div className="relative">
           {isBigBlind && !hasSmallBlind && (
             <div className="w-full max-w-lg mx-auto">
               <Share id={gameId} challengers={challengers} address={address} />
@@ -147,7 +147,7 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
               player={address}
             />
           )}
-        </>
+        </div>
       </GameLayout>
     </div>
   );

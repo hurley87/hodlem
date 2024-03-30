@@ -62,28 +62,28 @@ function ActivePlayer({ handId, activeStack, opposingStack }: Props) {
   if (!profile) return null;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardDescription>
-          <div className="flex justify-between">
-            <div>
-              {profile.displayName} |{' '}
-              {!activeStack ? 0 : toHumanReadable(activeStack)} $DEGEN
-            </div>
-            {isActivePlayer ? (
-              <Badge className="bg-green-500">Your turn</Badge>
-            ) : isBigBlind ? (
-              <Badge variant="outline">Big blind</Badge>
-            ) : (
-              <Badge variant="outline">Small blind</Badge>
-            )}
-          </div>
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+    <div className="flex flex-col gap-2 px-2 w-full">
+      <div className="flex justify-center">
         <Cards cards={cards} />
-      </CardContent>
-      <CardFooter className="flex gap-2">
+      </div>
+      <div
+        className={`w-40 mx-auto rounded-sm relative bottom-16 bg-white p-3 text-center shadow-lg ${
+          isActivePlayer && 'shadow-green-200'
+        }`}
+      >
+        <div className="absolute top-0 right-0">
+          {isBigBlind ? (
+            <Badge className="relative bottom-3 left-3">B</Badge>
+          ) : (
+            <Badge className="relative bottom-3 left-3">S</Badge>
+          )}
+        </div>
+        <div className="text-xs">{profile.username}</div>
+        <div className="text-sm font-bold">
+          {!activeStack ? 0 : toHumanReadable(activeStack)}
+        </div>
+      </div>
+      <div className="text-center relative bottom-10 flex gap-2 justify-center">
         {!isActivePlayer && handOver && hand.result === 'win' && (
           <div className="text-sm text-muted-foreground">
             Waiting on other player to claim ...
@@ -153,8 +153,8 @@ function ActivePlayer({ handId, activeStack, opposingStack }: Props) {
             <Button variant="outline">View Transaction</Button>
           </Link>
         )}
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 }
 

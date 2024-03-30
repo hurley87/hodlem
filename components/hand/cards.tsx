@@ -7,9 +7,9 @@ type Props = {
 
 function Cards({ cards }: Props) {
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-1">
       {cards?.map((card: string) => (
-        <div key={card} className="bg-white rounded-md">
+        <div key={Math.random()} className="bg-white rounded-md shadow-xl">
           <Image alt={card} src={`/cards/${card}.svg`} width={75} height={90} />
         </div>
       ))}

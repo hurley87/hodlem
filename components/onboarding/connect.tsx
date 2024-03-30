@@ -12,12 +12,12 @@ function ConnectWallet() {
         <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
           <div className="absolute inset-0 bg-zinc-900" />
           <div className="relative z-20 flex items-center text-lg font-medium">
-            hodl&apos;em
+            hodl &apos;em
           </div>
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">
               <div className="text-lg">
-                &ldquo;You&apos;ve got to know when to hodl&apos;em. Know when
+                &ldquo;You&apos;ve got to know when to hodl &apos;em. Know when
                 to fold &apos;em. Know when to walk away. And know when to
                 run.&rdquo;
               </div>

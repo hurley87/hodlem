@@ -11,7 +11,7 @@ export function GameLayout({ children }: Props) {
       <div className="border-b">
         <div className="px-2 md:container flex h-14 max-w-screen-2xl items-center justify-between">
           <Link href="/">
-            <h1 className="font-bold">hodl&apos;em</h1>
+            <h1 className="font-bold">hodl &apos;em</h1>
           </Link>
           <UserNav />
         </div>

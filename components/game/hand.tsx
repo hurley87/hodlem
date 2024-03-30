@@ -134,7 +134,7 @@ export default function Hand({
   }
 
   return (
-    <div className="w-full max-w-lg mx-auto flex flex-col gap-2">
+    <div className="w-full max-w-lg mx-auto flex flex-col gap-10 p-2 lg:p-6">
       <OpposingPlayer handId={handId} stack={opposingStack} />
       <Table handId={handId} pot={pot} />
       <ActivePlayer

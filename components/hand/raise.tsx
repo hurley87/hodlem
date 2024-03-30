@@ -1,7 +1,7 @@
 'use client';
 import { usePrivy } from '@privy-io/react-auth';
 import { useState } from 'react';
-import { parseEther } from 'viem';
+import { formatEther, parseEther } from 'viem';
 import { api } from '@/convex/_generated/api';
 import { useMutation } from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
@@ -82,7 +82,7 @@ function RaiseHand({
     try {
       const receipt = await onchain?.bet({
         onchainId,
-        betAmount: totalBetAmount.toString(),
+        betAmount: formatEther(totalBetAmount),
       });
 
       toast({
@@ -108,6 +108,7 @@ function RaiseHand({
 
       setCreatingBet(false);
     } catch (e) {
+      console.error('e', e);
       toast({
         title: 'Error',
         description: 'Error raising hand',
