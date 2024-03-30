@@ -51,7 +51,6 @@ export const update = mutation({
     { address, bio, displayName, fid, ownerAddress, pfp, username }
   ) => {
     const existingProfile = await getProfile(ctx, address);
-    console.log('existingProfile', existingProfile);
     if (!existingProfile) {
       return;
     }

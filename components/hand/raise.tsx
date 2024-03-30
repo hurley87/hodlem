@@ -108,7 +108,6 @@ function RaiseHand({
 
       setCreatingBet(false);
     } catch (e) {
-      console.error('e', e);
       toast({
         title: 'Error',
         description: 'Error raising hand',

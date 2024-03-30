@@ -35,8 +35,6 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
   const hasBalanceButNoAllowance = balance !== 0 && allowance === 0;
 
   useEffect(() => {
-    console.log(user);
-    console.log(hasFarcasterLinked);
     const address = user?.wallet?.address as `0x${string}`;
 
     const updateProfileWithFarcaster = async (user: any) => {
@@ -60,8 +58,6 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
     };
 
     const createProfile = async () => {
-      console.log('creating profile');
-      console.log(address);
       await create({
         address,
       });
