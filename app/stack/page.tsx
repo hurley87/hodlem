@@ -57,8 +57,8 @@ export default function ManageStack() {
         <Card>
           <CardHeader>
             <CardDescription>
-              Right now you have an authorized stack of {profile?.allowance}{' '}
-              $DEGEN.
+              Right now you have an authorized stack of{' '}
+              {toHumanReadable(profile?.allowance)} $DEGEN.
             </CardDescription>
           </CardHeader>
           <CardContent>

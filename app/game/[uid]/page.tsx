@@ -64,9 +64,6 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
     }
   });
 
-  console.log('hands', hands);
-  console.log('isBigBlind', isBigBlind);
-
   if (!ready && !game && !hands) {
     return <Loading />;
   }
