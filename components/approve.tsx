@@ -40,6 +40,7 @@ export default function Approve({
 
       setIsApproving(false);
     } catch (e) {
+      console.log(e);
       toast({
         title: 'Error',
         description: 'Error approving token allowance',
