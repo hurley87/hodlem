@@ -14,7 +14,7 @@ export default function Switch({ wallet }: { wallet: any }) {
 
   return (
     <Button className="w-full" disabled={isSwitching} onClick={switchNetwork}>
-      {isSwitching ? 'Switching...' : 'Switch to the Base chain'}
+      {isSwitching ? 'Switching...' : 'Switch to Base'}
     </Button>
   );
 }

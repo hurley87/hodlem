@@ -80,9 +80,7 @@ function JoinHand({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {!onchain?.isRightChain ? (
-          <Switch wallet={onchain?.wallet} />
-        ) : !(profile?.allowance >= bigBlindBetTotal) ? (
+        {!(profile?.allowance >= bigBlindBetTotal) ? (
           <Approve address={address} balance={bigBlindBetTotal.toString()} />
         ) : (
           <Button onClick={handleJoin} className="w-full">

@@ -6,6 +6,7 @@ import { toHumanReadable } from '@/lib/utils';
 import { ToastAction } from '@radix-ui/react-toast';
 import Link from 'next/link';
 import { useState } from 'react';
+import Switch from './switch';
 
 export default function Approve({
   address,
@@ -16,6 +17,7 @@ export default function Approve({
 }) {
   const [isApproving, setIsApproving] = useState(false);
   const onchain = useChain({ address });
+  const isRightChain = onchain?.isRightChain;
 
   const approveTokenAllowance = async () => {
     setIsApproving(true);
@@ -51,10 +53,16 @@ export default function Approve({
   };
 
   return (
-    <Button onClick={approveTokenAllowance} className="w-full">
-      {isApproving
-        ? 'Approving...'
-        : `Approve ${toHumanReadable(parseInt(balance))} $DEGEN`}
-    </Button>
+    <>
+      {!isRightChain ? (
+        <Switch wallet={onchain?.wallet} />
+      ) : (
+        <Button onClick={approveTokenAllowance} className="w-full">
+          {isApproving
+            ? 'Approving...'
+            : `Approve ${toHumanReadable(parseInt(balance))} $DEGEN`}
+        </Button>
+      )}
+    </>
   );
 }
