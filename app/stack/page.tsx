@@ -8,32 +8,15 @@ import {
   CardDescription,
   CardHeader,
 } from '@/components/ui/card';
-import { useToast } from '@/components/ui/use-toast';
 import useProfile from '@/hooks/useProfile';
 import { toHumanReadable } from '@/lib/utils';
 import { usePrivy } from '@privy-io/react-auth';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 
 export default function ManageStack() {
-  const { user, ready } = usePrivy();
+  const { user } = usePrivy();
   const address = user?.wallet?.address as `0x${string}`;
   const profile = useProfile({ address });
-  const { toast } = useToast();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (ready && !user) {
-      toast({
-        title: 'Error',
-        description: 'Please connect your wallet',
-        variant: 'destructive',
-      });
-      router.push('/');
-      return;
-    }
-  }, [ready, user]);
 
   return (
     <GameLayout>
