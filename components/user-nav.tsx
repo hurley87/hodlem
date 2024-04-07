@@ -1,5 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,13 +12,20 @@ import useProfile from '@/hooks/useProfile';
 import { toHumanReadable } from '@/lib/utils';
 import { usePrivy } from '@privy-io/react-auth';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export function UserNav() {
   const { user, logout } = usePrivy();
   const address = user?.wallet?.address as `0x${string}`;
   const profile = useProfile({ address });
+  const router = useRouter();
 
   if (!profile) return null;
+
+  const handleLogout = () => {
+    logout();
+    router.push('/');
+  };
 
   return (
     <DropdownMenu>
@@ -52,18 +58,15 @@ export function UserNav() {
           <Link href="/">
             <DropdownMenuItem>Games</DropdownMenuItem>
           </Link>
-          <Link
-            target="_blank"
-            href="https://app.uniswap.org/swap?outputCurrency=0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed&chain=base"
-          >
-            <DropdownMenuItem>Buy $DEGEN</DropdownMenuItem>
+          <Link href="/stack">
+            <DropdownMenuItem>Manage Stack</DropdownMenuItem>
           </Link>
           <Link target="_blank" href="https://warpcast.com/hurls">
             <DropdownMenuItem>Questions?</DropdownMenuItem>
           </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout}>Log out</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -128,6 +128,7 @@ function BetHand({
           opposingStack={opposingStack as number}
           activeStack={activeStack as number}
           raiseAmount={100}
+          isRaise={false}
         />
       </DialogContent>
     </Dialog>

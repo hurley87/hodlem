@@ -3,7 +3,6 @@ import { usePrivy } from '@privy-io/react-auth';
 import ConnectWallet from '@/components/onboarding/connect';
 import LinkFarcaster from '@/components/onboarding/link';
 import FundAccount from '@/components/onboarding/fund';
-import Approve from '@/components/onboarding/approve';
 import Loading from '@/components/loading';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
@@ -16,8 +15,6 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
   const { user, ready } = usePrivy();
   const address = user?.wallet?.address as `0x${string}`;
   const degenContract = process.env.NEXT_PUBLIC_DEGEN_CONTRACT as `0x${string}`;
-  const hodlemContract = process.env
-    .NEXT_PUBLIC_HODLEM_CONTRACT as `0x${string}`;
   const publicClient = createPublicClient({
     chain,
     transport: http(),
@@ -28,15 +25,9 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
     address,
   });
   const hasFarcasterLinked = user?.farcaster;
-  const [balance, setBalance] = useState<any>(0);
-  const [allowance, setAllowance] = useState<any>(0);
-
-  const noBalance = balance === 0;
-  const hasBalanceButNoAllowance = balance !== 0 && allowance === 0;
+  const [balance, setBalance] = useState<any>(null);
 
   useEffect(() => {
-    const address = user?.wallet?.address as `0x${string}`;
-
     const updateProfileWithFarcaster = async (user: any) => {
       const farcaster = user?.farcaster;
       const username = farcaster?.username || ('' as string);
@@ -73,20 +64,9 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
       setBalance(parseInt(formatEther(_balance)));
     };
 
-    const fetchAllowance = async () => {
-      let _allowance = (await publicClient.readContract({
-        address: degenContract,
-        abi: Degen.abi,
-        functionName: 'allowance',
-        args: [address, hodlemContract],
-      })) as bigint;
-      setAllowance(parseInt(formatEther(_allowance)));
-    };
-
     if (address) {
       createProfile();
       fetchBalance();
-      fetchAllowance();
     }
     if (user && hasFarcasterLinked) updateProfileWithFarcaster(user);
   }, [user, profile]);
@@ -99,9 +79,7 @@ function OnboardingWrapper({ children }: { children: React.ReactNode }) {
 
   if (!hasFarcasterLinked) return <LinkFarcaster />;
 
-  if (noBalance) return <FundAccount />;
-
-  if (hasBalanceButNoAllowance) return <Approve balance={balance.toString()} />;
+  if (balance && balance === 0) return <FundAccount />;
 
   return <div>{children}</div>;
 }

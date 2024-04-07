@@ -10,12 +10,14 @@ function CreateHandForm({
   opposingStack,
   activeStack,
   raiseAmount,
+  isRaise,
 }: {
   handleCreateHand: (buy: number) => void;
   creatingHand: boolean;
   opposingStack: number;
   activeStack: number;
   raiseAmount: number;
+  isRaise: boolean;
 }) {
   const [buy, setBuy] = useState(raiseAmount);
 
@@ -36,7 +38,9 @@ function CreateHandForm({
           disabled={creatingHand}
           onClick={(e) => handleCreateHand(buy)}
         >
-          {creatingHand ? 'Betting...' : `Bet ${buy} $DEGEN`}
+          {creatingHand
+            ? `${isRaise ? 'Raising...' : 'Betting...'}`
+            : `${isRaise ? 'Raise' : 'Bet'} ${buy} $DEGEN`}
         </Button>
       </DialogFooter>
     </>

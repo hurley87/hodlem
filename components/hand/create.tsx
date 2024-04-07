@@ -134,11 +134,15 @@ function CreateHand({
       }) as any;
 
       const { handId, betAmount } = receiptLogs[0].args;
+
+      console.log(handId, betAmount);
       const onchainId = `${handId}`;
       const bigBlindBetTotal = Number(formatEther(betAmount));
       const hand = await fetchQuery(api.hands.getHandByOnchainId, {
         onchainId,
       });
+
+      console.log(hand);
 
       if (hand?.length === 1) {
         return;
@@ -153,7 +157,8 @@ function CreateHand({
       await addSmallBlind({ id: gameId, smallBlind });
 
       setCreatingHand(false);
-    } catch {
+    } catch (e) {
+      console.log(e);
       toast({
         title: 'Error',
         description: 'Error creating hand',
@@ -206,7 +211,7 @@ function CreateHand({
           <DialogTitle>Create Buy-in</DialogTitle>
           <DialogDescription>
             {allowMore
-              ? 'You do not have enough balance to buy-in. You can top up your balance by allowing Hodlem to spend your $DEGEN.'
+              ? "Your stack isn't big enough for the buy-in. You can top up your balance by allowing Hodlem to spend your $DEGEN."
               : 'There is a 100 $DEGEN rake fee. The small blind will have to match your buy-in above this fee.'}
           </DialogDescription>
         </DialogHeader>
@@ -221,6 +226,7 @@ function CreateHand({
             opposingStack={900}
             activeStack={900}
             raiseAmount={100}
+            isRaise={false}
           />
         )}
       </DialogContent>

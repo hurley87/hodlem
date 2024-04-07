@@ -10,8 +10,8 @@ export default function useProfile({ address }: { address: Address }) {
   const degenContract = process.env.NEXT_PUBLIC_DEGEN_CONTRACT as `0x${string}`;
   const hodlemContract = process.env
     .NEXT_PUBLIC_HODLEM_CONTRACT as `0x${string}`;
-  const [balance, setBalance] = useState<any>(0);
-  const [allowance, setAllowance] = useState<any>(0);
+  const [balance, setBalance] = useState<any>(null);
+  const [allowance, setAllowance] = useState<any>(null);
   const publicClient = createPublicClient({
     chain,
     transport: http(),

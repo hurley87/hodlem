@@ -64,17 +64,15 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
     }
   });
 
-  if (!ready) {
+  if (!ready && !game) {
     return <Loading />;
   }
 
-  // Update cursor coordinates on pointer move
   function handlePointerMove(e: React.PointerEvent<HTMLDivElement>) {
     const cursor = { x: Math.floor(e.clientX), y: Math.floor(e.clientY) };
     updateMyPresence({ cursor });
   }
 
-  // Set cursor to null on pointer leave
   function handlePointerLeave(e: React.PointerEvent<HTMLDivElement>) {
     updateMyPresence({ cursor: null });
   }

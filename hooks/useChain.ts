@@ -53,6 +53,8 @@ export default function useChain({ address }: { address: Address }) {
     buyIn: string;
     smallBlind: string;
   }) => {
+    console.log('buyIn', buyIn);
+
     const { request } = await publicClient.simulateContract({
       address: hodlemContract,
       abi: Hodlem.abi,
@@ -160,5 +162,7 @@ export default function useChain({ address }: { address: Address }) {
     call,
     cancel,
     join,
+    isRightChain: chain.id === parseInt(wallet?.chainId.split(':')[1]),
+    wallet,
   };
 }

@@ -11,6 +11,9 @@ import { useToast } from '../ui/use-toast';
 import Link from 'next/link';
 import { ToastAction } from '../ui/toast';
 import { useBroadcastEvent } from '@/liveblocks.config';
+import Switch from '../switch';
+import useProfile from '@/hooks/useProfile';
+import Approve from '../approve';
 
 function JoinHand({
   id,
@@ -26,6 +29,7 @@ function JoinHand({
   const [isJoining, setIsJoining] = useState(false);
   const join = useMutation(api.hands.join);
   const onchain = useChain({ address });
+  const profile = useProfile({ address });
   const { toast } = useToast();
   const broadcast = useBroadcastEvent();
 
@@ -76,9 +80,15 @@ function JoinHand({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Button onClick={handleJoin} className="w-full">
-          {isJoining ? 'Joining...' : 'Join hand'}
-        </Button>
+        {!onchain?.isRightChain ? (
+          <Switch wallet={onchain?.wallet} />
+        ) : !(profile?.allowance >= bigBlindBetTotal) ? (
+          <Approve address={address} balance={bigBlindBetTotal.toString()} />
+        ) : (
+          <Button onClick={handleJoin} className="w-full">
+            {isJoining ? 'Joining...' : 'Join hand'}
+          </Button>
+        )}
       </CardContent>
     </Card>
   );

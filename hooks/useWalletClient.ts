@@ -1,4 +1,3 @@
-import { useToast } from '@/components/ui/use-toast';
 import {
   type WalletClient,
   createWalletClient,
@@ -12,13 +11,13 @@ type WalletClientType = {
 };
 
 const useWalletClient = async ({ chain, wallet }: WalletClientType) => {
-  const { toast } = useToast();
+  // const { toast } = useToast();
 
   if (!wallet) return null;
 
   try {
     // Switch your wallet to your target chain before getting the viem WalletClient
-    await wallet?.switchChain(chain.id);
+    // await wallet?.switchChain(chain.id);
     // Get an EIP1193 provider from the user's wallet
     const ethereumProvider = await wallet?.getEthereumProvider();
     // get address from wallet
@@ -32,11 +31,12 @@ const useWalletClient = async ({ chain, wallet }: WalletClientType) => {
 
     return walletClient as WalletClient;
   } catch (e) {
-    toast({
-      title: 'Error',
-      description: 'switch to the Base network',
-      variant: 'destructive',
-    });
+    console.log('Error switching to the Base network', e);
+    // toast({
+    //   title: 'Error',
+    //   description: 'switch to the Base network',
+    //   variant: 'destructive',
+    // });
   }
 };
 
