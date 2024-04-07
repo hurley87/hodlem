@@ -64,7 +64,10 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
     }
   });
 
-  if (!ready && !game) {
+  console.log('hands', hands);
+  console.log('isBigBlind', isBigBlind);
+
+  if (!ready && !game && !hands) {
     return <Loading />;
   }
 
@@ -90,60 +93,70 @@ export default function Game({ params }: { params: { uid: Id<'games'> } }) {
         ))}
       <GameLayout>
         <div className="relative">
-          {isBigBlind && !hasSmallBlind && (
-            <div className="w-full max-w-lg mx-auto">
-              <Share id={gameId} challengers={challengers} address={address} />
-            </div>
-          )}
-
-          {!isBigBlind && !hasSmallBlind && !challengers?.includes(address) && (
-            <Challenge
-              id={gameId}
-              challengers={challengers}
-              address={address}
-            />
-          )}
-
-          {!isBigBlind && !hasSmallBlind && challengers?.includes(address) && (
-            <Card>
-              <CardHeader>
-                <CardDescription>
-                  Waiting on the big blind to set the buy-in ...
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          )}
-
-          {isBigBlind && hasSmallBlind && !activeHand && (
-            <Card>
-              <CardHeader>
-                <CardDescription>
-                  Start by creating a buy-in for the small blind ...
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <CreateHand gameId={gameId} smallBlind={game?.smallBlind} />
-              </CardContent>
-            </Card>
-          )}
-
-          {!isBigBlind && hasSmallBlind && !activeHand && (
-            <Card>
-              <CardHeader>
-                <CardDescription>
-                  Waiting on the big blind to set the buy-in ...
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          )}
-
-          {hasSmallBlind && activeHand && (
+          {activeHand ? (
             <Hand
               isBigBlind={isBigBlind}
               handId={activeHand._id}
               gameId={gameId}
               player={address}
             />
+          ) : (
+            <>
+              {isBigBlind && !hasSmallBlind && (
+                <div className="w-full max-w-lg mx-auto">
+                  <Share
+                    id={gameId}
+                    challengers={challengers}
+                    address={address}
+                  />
+                </div>
+              )}
+
+              {!isBigBlind &&
+                !hasSmallBlind &&
+                !challengers?.includes(address) && (
+                  <Challenge
+                    id={gameId}
+                    challengers={challengers}
+                    address={address}
+                  />
+                )}
+
+              {!isBigBlind &&
+                !hasSmallBlind &&
+                challengers?.includes(address) && (
+                  <Card>
+                    <CardHeader>
+                      <CardDescription>
+                        Waiting on the big blind to set the buy-in ...
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                )}
+
+              {isBigBlind && hasSmallBlind && (
+                <Card>
+                  <CardHeader>
+                    <CardDescription>
+                      Start by creating a buy-in for the small blind ...
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <CreateHand gameId={gameId} smallBlind={game?.smallBlind} />
+                  </CardContent>
+                </Card>
+              )}
+
+              {!isBigBlind && hasSmallBlind && (
+                <Card>
+                  <CardHeader>
+                    <CardDescription>
+                      Waiting on the big blind to set the buy-in ...
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              )}
+            </>
           )}
         </div>
       </GameLayout>

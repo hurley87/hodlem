@@ -744,6 +744,23 @@ export const determineWinner = mutation({
       return;
     }
 
+    const getSecondPairValue = (cards: string[]) => {
+      const cardValues = cards.map((card) => cardValue(card));
+      const counts = cardValues.reduce((acc, card) => {
+        if (!acc[card]) {
+          acc[card] = 0;
+        }
+        acc[card]++;
+        return acc;
+      }, {} as Record<number, number>);
+
+      const pairs = Object.entries(counts)
+        .filter(([_, count]) => count === 2)
+        .map(([card]) => parseInt(card));
+
+      return Math.min(...pairs);
+    };
+
     // check for two pair
     if (checkTwoPair(smallBlindCards) && checkTwoPair(bigBlindCards)) {
       const smallBlindPair = getPairValue(smallBlindCards);
@@ -768,28 +785,51 @@ export const determineWinner = mutation({
           activePlayer: hand.bigBlind,
         });
       } else {
-        if (smallBlindHighCard > bigBlindHighCard) {
+        const smallBlindSecondPair = getSecondPairValue(smallBlindCards);
+        const bigBlindSecondPair = getSecondPairValue(bigBlindCards);
+
+        if (smallBlindSecondPair > bigBlindSecondPair) {
           await ctx.db.patch(id, {
             stage: 'over',
             result: 'win',
-            resultMessage: 'Small blind wins with higher card and two pair',
+            resultMessage:
+              'Small blind wins with higher second pair and two pair',
             winner: hand.smallBlind,
             activePlayer: hand.smallBlind,
           });
-        } else if (bigBlindHighCard > smallBlindHighCard) {
+        } else if (bigBlindSecondPair > smallBlindSecondPair) {
           await ctx.db.patch(id, {
             stage: 'over',
             result: 'win',
-            resultMessage: 'Big blind wins with higher card and two pair',
+            resultMessage:
+              'Big blind wins with higher second pair and two pair',
             winner: hand.bigBlind,
             activePlayer: hand.bigBlind,
           });
         } else {
-          await ctx.db.patch(id, {
-            stage: 'over',
-            result: 'tie',
-            resultMessage: "It's a tie with a two pair",
-          });
+          if (smallBlindHighCard > bigBlindHighCard) {
+            await ctx.db.patch(id, {
+              stage: 'over',
+              result: 'win',
+              resultMessage: 'Small blind wins with higher card and two pair',
+              winner: hand.smallBlind,
+              activePlayer: hand.smallBlind,
+            });
+          } else if (bigBlindHighCard > smallBlindHighCard) {
+            await ctx.db.patch(id, {
+              stage: 'over',
+              result: 'win',
+              resultMessage: 'Big blind wins with higher card and two pair',
+              winner: hand.bigBlind,
+              activePlayer: hand.bigBlind,
+            });
+          } else {
+            await ctx.db.patch(id, {
+              stage: 'over',
+              result: 'tie',
+              resultMessage: "It's a tie with a two pair",
+            });
+          }
         }
       }
       return;
