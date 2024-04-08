@@ -369,8 +369,6 @@ export const determineWinner = mutation({
     const turnCard = hand?.turnCard;
     const riverCard = hand?.riverCard;
 
-    console.log('flopCards', flopCards);
-
     if (!flopCards || !turnCard || !riverCard) {
       alert('You can only reveal hand after dealing');
       return;

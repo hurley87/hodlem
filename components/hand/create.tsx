@@ -135,14 +135,11 @@ function CreateHand({
 
       const { handId, betAmount } = receiptLogs[0].args;
 
-      console.log(handId, betAmount);
       const onchainId = `${handId}`;
       const bigBlindBetTotal = Number(formatEther(betAmount));
       const hand = await fetchQuery(api.hands.getHandByOnchainId, {
         onchainId,
       });
-
-      console.log(hand);
 
       if (hand?.length === 1) {
         return;

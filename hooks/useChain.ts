@@ -53,8 +53,6 @@ export default function useChain({ address }: { address: Address }) {
     buyIn: string;
     smallBlind: string;
   }) => {
-    console.log('buyIn', buyIn);
-
     const { request } = await publicClient.simulateContract({
       address: hodlemContract,
       abi: Hodlem.abi,
