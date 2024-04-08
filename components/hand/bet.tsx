@@ -19,6 +19,7 @@ import useChain from '@/hooks/useChain';
 import { ToastAction } from '../ui/toast';
 import Link from 'next/link';
 import { useBroadcastEvent } from '@/liveblocks.config';
+import Switch from '../switch';
 
 function BetHand({
   id,
@@ -36,6 +37,7 @@ function BetHand({
   const address = user?.wallet?.address as `0x${string}`;
   const saveBet = useMutation(api.hands.bet);
   const onchain = useChain({ address });
+  const isRightChain = onchain?.isRightChain;
 
   const broadcast = useBroadcastEvent();
   const { toast } = useToast();
@@ -122,14 +124,18 @@ function BetHand({
           <DialogTitle>Place a bet</DialogTitle>
           <DialogDescription>Use slider to make your bet</DialogDescription>
         </DialogHeader>
-        <CreateHandForm
-          handleCreateHand={handleBetHand}
-          creatingHand={creatingBet}
-          opposingStack={opposingStack as number}
-          activeStack={activeStack as number}
-          raiseAmount={100}
-          isRaise={false}
-        />
+        {!isRightChain ? (
+          <Switch wallet={onchain?.wallet} />
+        ) : (
+          <CreateHandForm
+            handleCreateHand={handleBetHand}
+            creatingHand={creatingBet}
+            opposingStack={opposingStack as number}
+            activeStack={activeStack as number}
+            raiseAmount={100}
+            isRaise={false}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );

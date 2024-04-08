@@ -21,6 +21,7 @@ import { useToast } from '../ui/use-toast';
 import Link from 'next/link';
 import { ToastAction } from '../ui/toast';
 import { useBroadcastEvent } from '@/liveblocks.config';
+import Switch from '../switch';
 
 function RaiseHand({
   id,
@@ -41,6 +42,7 @@ function RaiseHand({
   const betHand = useMutation(api.hands.bet);
   const degen = useRead();
   const onchain = useChain({ address });
+  const isRightChain = onchain?.isRightChain;
   const { toast } = useToast();
   const broadcast = useBroadcastEvent();
 
@@ -130,14 +132,18 @@ function RaiseHand({
             Call {betAmount} and raise at least {betAmount} more
           </DialogDescription>
         </DialogHeader>
-        <CreateHandForm
-          handleCreateHand={handleRaiseHand}
-          creatingHand={creatingBet}
-          opposingStack={opposingStack}
-          activeStack={activeStack as number}
-          raiseAmount={Number(betAmount)}
-          isRaise={true}
-        />
+        {!isRightChain ? (
+          <Switch wallet={onchain?.wallet} />
+        ) : (
+          <CreateHandForm
+            handleCreateHand={handleRaiseHand}
+            creatingHand={creatingBet}
+            opposingStack={opposingStack}
+            activeStack={activeStack as number}
+            raiseAmount={Number(betAmount)}
+            isRaise={true}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );
