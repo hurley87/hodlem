@@ -22,6 +22,7 @@ import useChain from '@/hooks/useChain';
 import { useToast } from '../ui/use-toast';
 import Link from 'next/link';
 import { ToastAction } from '../ui/toast';
+import Switch from '../switch';
 
 function CreateHand({
   gameId,
@@ -40,6 +41,7 @@ function CreateHand({
   const [isApproving, setIsApproving] = useState(false);
   const degen = useRead();
   const onchain = useChain({ address });
+  const isRightChain = onchain?.isRightChain;
   const { toast } = useToast();
 
   const handleCreateHand = async (buyIn: number) => {
@@ -212,7 +214,9 @@ function CreateHand({
               : 'There is a 100 $DEGEN rake fee. The small blind will have to match your buy-in above this fee.'}
           </DialogDescription>
         </DialogHeader>
-        {allowMore ? (
+        {!isRightChain ? (
+          <Switch wallet={onchain?.wallet} />
+        ) : allowMore ? (
           <Button disabled={isApproving} onClick={approveTokenAllowance}>
             {isApproving ? 'Approving...' : 'Approve $DEGEN'}
           </Button>
